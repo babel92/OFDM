@@ -3,6 +3,7 @@
 
 #include <queue>
 #include "global.h"
+#include "fftw/fftw3.h"
 
 using std::queue;
 
@@ -19,6 +20,7 @@ class Plotter
         Plotter();
         void SetBGColor(float R,float G,float B);
         void Plot(Real*buf,int size);
+        void PlotSpectrum(Real*buf,int size);
         static Plotter* GetInstance(){return m_inst;}
         virtual ~Plotter();
     protected:

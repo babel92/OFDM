@@ -1,16 +1,17 @@
 #include "Plotter.h"
 #include <gl/glut.h>
 #include <process.h>
+#include <cmath>
 
 void DrawBlock()
 {
     glLineWidth(1);
     glColor3f(0,0,0);
     glBegin(GL_LINE_LOOP);
-    glVertex2f(0,0);
-    glVertex2f(0,410);
-    glVertex2f(760,410);
-    glVertex2f(760,0);
+        glVertex2f(0,0);
+        glVertex2f(0,410);
+        glVertex2f(760,410);
+        glVertex2f(760,0);
     glEnd();
 }
 
@@ -32,7 +33,7 @@ void PlotFunc()
         glColor3f(0,0,1);
         glBegin(GL_LINE_STRIP);
         for(int i=0; i<pack.size; ++i)
-            glVertex2f(i*760./pack.size,(pack.data[i]+1)/2*410);
+            glVertex2f(i*760./pack.size,(pack.data[i]+1)/2*10);
         glEnd();
         //DrawBlock();
 
@@ -92,6 +93,20 @@ void Plotter::Plot(Real*buf,int size)
     pack.size=size;
     memcpy(pack.data,buf,sizeof(Real)*size);
     m_pending.push(pack);
+}
+
+void Plotter::PlotSpectrum(Real*buf,int size)
+{
+    Real mem[512];
+    fftwf_complex fft[512];
+
+    static fftwf_plan plan=fftwf_plan_dft_r2c_1d(size,(float*)buf,fft,FFTW_ESTIMATE);
+    fftwf_execute(plan);
+
+    for(int i=0; i<size/2; ++i)
+        ((float*)mem)[i]=sqrtf(fft[i][0]*fft[i][0]+fft[i][1]*fft[i][1]);
+
+    Plot(mem,size/2);
 }
 
 void Plotter::SetBGColor(float R,float G,float B)

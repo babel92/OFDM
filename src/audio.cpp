@@ -39,7 +39,7 @@ void Init_Portaudio_Record(DataCallback cutecallback,void*userdata)
                                 0,          /* stereo output */
                                 paFloat32,
                                 44100,
-                                256,        /* frames per buffer, i.e. the number
+                                1024,        /* frames per buffer, i.e. the number
                                                    of sample frames that PortAudio will
                                                    request from the callback. Many apps
                                                    may want to use

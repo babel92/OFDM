@@ -16,7 +16,7 @@
 					<Add directory="F:\Projects\OFDM\include" />
 				</Compiler>
 				<Linker>
-					<Add option="-lfftw3" />
+					<Add option="-lfftw3f" />
 					<Add option="-lportaudio.dll" />
 					<Add option="-lglut" />
 					<Add option="-lopengl32" />
