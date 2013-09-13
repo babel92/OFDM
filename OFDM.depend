@@ -1,0 +1,168 @@
+# depslib dependency file v1.0
+1378946897 source:f:\projects\ofdm\main.cpp
+	<iostream>
+	<cstdlib>
+	"libs/fftw/include/fftw3.h"
+	"libs/portaudio/include/portaudio.h"
+
+1378931173 f:\projects\ofdm\libs\fftw\include\fftw3.h
+	<stdio.h>
+	<stddef.h>
+
+1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
+
+1379050025 source:f:\projects\ofdm\src\main.cpp
+	"global.h"
+	"audio.h"
+	<iostream>
+	"plotter.h"
+
+1379050463 source:f:\projects\ofdm\src\audio.cpp
+	"audio.h"
+	"global.h"
+	"portaudio/portaudio.h"
+
+1379005788 f:\projects\ofdm\include\global.h
+	<cstdio>
+	<cstdlib>
+
+1314297841 f:\projects\ofdm\include\portaudio\portaudio.h
+
+1379007682 f:\projects\ofdm\include\audio.h
+	"portaudio/portaudio.h"
+
+1318470181 f:\projects\ofdm\include\plplot\plplot.h
+	"plConfig.h"
+	<stdio.h>
+	<stdlib.h>
+	"pldll.h"
+	<stdint.h>
+	<Limits.h>
+
+1379016869 f:\projects\ofdm\include\plplot\plconfig.h
+	<config.h>
+
+1379016869 f:\projects\ofdm\include\plplot\pldll.h
+
+1367414726 f:\projects\ofdm\include\mgl2\mgl.h
+	"mgl2/mgl_cf.h"
+	"mgl2/data.h"
+	"mgl2/datac.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\mgl_cf.h
+	<mgl2/data.h>
+	<mgl2/datac.h>
+	<mgl2/base_cf.h>
+	<mgl2/data_cf.h>
+	<mgl2/datac_cf.h>
+	<mgl2/cont.h>
+	<mgl2/fit.h>
+	<mgl2/plot.h>
+	<mgl2/surf.h>
+	<mgl2/volume.h>
+	<mgl2/vect.h>
+	<mgl2/prim.h>
+	<mgl2/other.h>
+	<mgl2/canvas_cf.h>
+	<mgl2/addon.h>
+
+1367414726 f:\projects\ofdm\include\mgl2\data.h
+	"mgl2/data_cf.h"
+	<vector>
+	<string>
+
+1367414726 f:\projects\ofdm\include\mgl2\data_cf.h
+	"mgl2/base.h"
+	<gsl/gsl_vector.h>
+	<gsl/gsl_matrix.h>
+
+1367414726 f:\projects\ofdm\include\mgl2\base.h
+	<stdint.h>
+	"mgl2/define.h"
+	<vector>
+	<string>
+	"mgl2/type.h"
+	"mgl2/data.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\define.h
+	"mgl2/config.h"
+	"mgl2/dllexport.h"
+	<zlib.h>
+	<math.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<wchar.h>
+	<float.h>
+	<complex>
+	<complex.h>
+	<pthread.h>
+
+1356217506 f:\projects\ofdm\include\mgl2\config.h
+
+1367414743 f:\projects\ofdm\include\mgl2\dllexport.h
+
+1367414726 f:\projects\ofdm\include\mgl2\type.h
+	<stdint.h>
+	"mgl2/define.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\datac.h
+	"mgl2/data.h"
+	"mgl2/datac_cf.h"
+	<vector>
+	<string>
+
+1367414726 f:\projects\ofdm\include\mgl2\datac_cf.h
+	"mgl2/base.h"
+	<gsl/gsl_vector.h>
+	<gsl/gsl_matrix.h>
+
+1367414726 f:\projects\ofdm\include\mgl2\base_cf.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\cont.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\fit.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\plot.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\surf.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\volume.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\vect.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\prim.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\other.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\canvas_cf.h
+	"mgl2/base.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\addon.h
+	"mgl2/define.h"
+
+1367414726 f:\projects\ofdm\include\mgl2\qt.h
+	<mgl2/base.h>
+	<mgl2/wnd.h>
+
+1367414726 f:\projects\ofdm\include\mgl2\wnd.h
+	"mgl2/mgl.h"
+
+1379050517 source:f:\projects\ofdm\src\plotter.cpp
+	"Plotter.h"
+	<gl/glut.h>
+	<process.h>
+
+1379049303 f:\projects\ofdm\include\plotter.h
+	<queue>
+	"global.h"
+

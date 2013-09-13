@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="OFDM" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\OFDM" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add directory="F:\Projects\OFDM\include" />
+				</Compiler>
+				<Linker>
+					<Add option="-lfftw3" />
+					<Add option="-lportaudio.dll" />
+					<Add option="-lmgl-qt" />
+					<Add option="-lmgl" />
+					<Add directory="libs" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\OFDM" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Unit filename="include\mgl2\addon.h" />
+		<Unit filename="include\mgl2\base.h" />
+		<Unit filename="include\mgl2\base_cf.h" />
+		<Unit filename="include\mgl2\canvas.h" />
+		<Unit filename="include\mgl2\canvas_cf.h" />
+		<Unit filename="include\mgl2\canvas_wnd.h" />
+		<Unit filename="include\mgl2\config.h" />
+		<Unit filename="include\mgl2\cont.h" />
+		<Unit filename="include\mgl2\data.h" />
+		<Unit filename="include\mgl2\data_cf.h" />
+		<Unit filename="include\mgl2\datac.h" />
+		<Unit filename="include\mgl2\datac_cf.h" />
+		<Unit filename="include\mgl2\define.h" />
+		<Unit filename="include\mgl2\dllexport.h" />
+		<Unit filename="include\mgl2\eval.h" />
+		<Unit filename="include\mgl2\evalc.h" />
+		<Unit filename="include\mgl2\fit.h" />
+		<Unit filename="include\mgl2\fltk.h" />
+		<Unit filename="include\mgl2\font.h" />
+		<Unit filename="include\mgl2\glut.h" />
+		<Unit filename="include\mgl2\mgl.h" />
+		<Unit filename="include\mgl2\mgl_cf.h" />
+		<Unit filename="include\mgl2\mpi.h" />
+		<Unit filename="include\mgl2\opengl.h" />
+		<Unit filename="include\mgl2\other.h" />
+		<Unit filename="include\mgl2\parser.h" />
+		<Unit filename="include\mgl2\plot.h" />
+		<Unit filename="include\mgl2\prim.h" />
+		<Unit filename="include\mgl2\qmathgl.h" />
+		<Unit filename="include\mgl2\qt.h" />
+		<Unit filename="include\mgl2\surf.h" />
+		<Unit filename="include\mgl2\type.h" />
+		<Unit filename="include\mgl2\vect.h" />
+		<Unit filename="include\mgl2\volume.h" />
+		<Unit filename="include\mgl2\window.h" />
+		<Unit filename="include\mgl2\wnd.h" />
+		<Unit filename="include\mgl2\wx.h" />
+		<Unit filename="libs\fftw\include\fftw3.h" />
+		<Unit filename="libs\portaudio\include\pa_asio.h" />
+		<Unit filename="libs\portaudio\include\pa_jack.h" />
+		<Unit filename="libs\portaudio\include\pa_linux_alsa.h" />
+		<Unit filename="libs\portaudio\include\pa_mac_core.h" />
+		<Unit filename="libs\portaudio\include\pa_win_ds.h" />
+		<Unit filename="libs\portaudio\include\pa_win_wasapi.h" />
+		<Unit filename="libs\portaudio\include\pa_win_waveformat.h" />
+		<Unit filename="libs\portaudio\include\pa_win_wmme.h" />
+		<Unit filename="libs\portaudio\include\portaudio.h" />
+		<Unit filename="src\audio.cpp" />
+		<Unit filename="src\main.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
