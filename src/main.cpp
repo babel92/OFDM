@@ -1,66 +1,23 @@
+#include "global.h"
+#include "audio.h"
 #include <iostream>
-#include <cstdlib>
-#include "fftw/include/fftw3.h"
-#include "portaudio/include/portaudio.h"
+#include "mgl2/qt.h"
 
 using namespace std;
 
-typedef
-#ifdef USE_DOUBLE
-double
-#else
-float
-#endif
-Real;
+mglGraph gr;
 
-int lineno;
-
-float frand()
+int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void*userdata)
 {
-    float r = (float)rand()/(float)RAND_MAX;
-    return r;
-}
-void Init_Portaudio()
-{
-    PaError err=Pa_Initialize();
-    if(paNoError!=err)
-    {
-        printf(  "PortAudio error: %s\n", Pa_GetErrorText( err ) );
-        exit(1);
-    }
-}
-
-void Cleanup_Portaudio()
-{
-    PaError err = Pa_Terminate();
-    if( err != paNoError )
-    {
-        printf(  "PortAudio error: %s\n", Pa_GetErrorText( err ) );
-    }
-}
-
-struct PaData
-{
-    Real left;
-    Real right;
-};
-
-int Pa_Stream( const void *input,
-               void *output,
-               unsigned long frameCount,
-               const PaStreamCallbackTimeInfo* timeInfo,
-               PaStreamCallbackFlags statusFlags,
-               void *userData )
-{
-    PaData*ptr=(PaData*)input;
-
-    for(int i=0; i<frameCount; i++ )
-    {
-        printf("%d:%f %f\n",++lineno,ptr->left,ptr->right);
-        ptr+=1;
-    }
+    gr.NewFrame();
+    gr.Box();
+    mglData data(framecount);
+    data.Set((float*)input,framecount);
+    gr.Plot(data,"b");
+    gr.EndFrame();
     return paContinue;
 }
+
 
 int main()
 {/*
@@ -81,30 +38,15 @@ int main()
 
     fftw_free(out);
     fftw_destroy_plan(plan);*/
+
+    gr.StartGIF("sample.gif",16);
+
     Init_Portaudio();
 
+    Init_Portaudio_Record(RecCallback,NULL);
 
-    PaStream *stream;
-    PaError err;
-    /* Open an audio I/O stream. */
-    err = Pa_OpenDefaultStream( &stream,
-                                2,          /* no input channels */
-                                0,          /* stereo output */
-                                paFloat32,  /* 32 bit floating point output */
-                                44100,
-                                256,        /* frames per buffer, i.e. the number
-                                                   of sample frames that PortAudio will
-                                                   request from the callback. Many apps
-                                                   may want to use
-                                                   paFramesPerBufferUnspecified, which
-                                                   tells PortAudio to pick the best,
-                                                   possibly changing, buffer size.*/
-                                Pa_Stream, /* this is your callback function */
-                                NULL); /*This is a pointer that will be passed to
-                                                   your callback*/
-    err = Pa_StartStream( stream );
     Pa_Sleep(5000);
-
     Cleanup_Portaudio();
+    gr.CloseGIF();
     return 0;
 }
