@@ -11,7 +11,7 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1379050025 source:f:\projects\ofdm\src\main.cpp
+1379052200 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
@@ -22,13 +22,13 @@
 	"global.h"
 	"portaudio/portaudio.h"
 
-1379005788 f:\projects\ofdm\include\global.h
+1379052200 f:\projects\ofdm\include\global.h
 	<cstdio>
 	<cstdlib>
 
-1314297841 f:\projects\ofdm\include\portaudio\portaudio.h
+1379052200 f:\projects\ofdm\include\portaudio\portaudio.h
 
-1379007682 f:\projects\ofdm\include\audio.h
+1379052200 f:\projects\ofdm\include\audio.h
 	"portaudio/portaudio.h"
 
 1318470181 f:\projects\ofdm\include\plplot\plplot.h
@@ -157,12 +157,12 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1379050517 source:f:\projects\ofdm\src\plotter.cpp
+1379052200 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
 	<gl/glut.h>
 	<process.h>
 
-1379049303 f:\projects\ofdm\include\plotter.h
+1379052200 f:\projects\ofdm\include\plotter.h
 	<queue>
 	"global.h"
 
