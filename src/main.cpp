@@ -1,22 +1,20 @@
 #include "global.h"
 #include "audio.h"
 #include <iostream>
-#include "mgl2/qt.h"
+#include "plotter.h"
+
 
 using namespace std;
 
-mglGraph gr;
+
 
 int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void*userdata)
 {
-    gr.NewFrame();
-    gr.Box();
-    mglData data(framecount);
-    data.Set((float*)input,framecount);
-    gr.Plot(data,"b");
-    gr.EndFrame();
+    Plotter*plt=(Plotter*)userdata;
+    plt->Plot((Sample*)input,framecount);
     return paContinue;
 }
+
 
 
 int main()
@@ -38,15 +36,13 @@ int main()
 
     fftw_free(out);
     fftw_destroy_plan(plan);*/
-
-    gr.StartGIF("sample.gif",16);
-
+    Plotter plt;
     Init_Portaudio();
 
-    Init_Portaudio_Record(RecCallback,NULL);
-
+    Init_Portaudio_Record(RecCallback,&plt);
+    while(1)
     Pa_Sleep(5000);
     Cleanup_Portaudio();
-    gr.CloseGIF();
+
     return 0;
 }
