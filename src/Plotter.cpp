@@ -100,8 +100,10 @@ void APIENTRY APCWrapper(ULONG_PTR plotter)
 
 HANDLE Plotter::m_thread;
 
+
+
 Plotter::Plotter()
-    :m_alerter(),m_line(NULL)
+    :m_alerter()
 {
     //ctor
     if(!m_thread)
@@ -114,6 +116,29 @@ Plotter::Plotter()
     m_instance++;
 }
 
+struct PlotData
+{
+    Plotter*plt;
+    Real*buf;
+    int size;
+};
+
+void PlotAgent(void*plotter)
+{
+    PlotData *ptr=(PlotData*)plotter;
+    ptr->plt->Plot(ptr->buf,ptr->size);
+    delete ptr;
+}
+
+void Plotter::SafePlot(Real*buf,int size)
+{
+    PlotData *ptr=new PlotData;
+    ptr->plt=this;
+    ptr->buf=buf;
+    ptr->size=size;
+    Fl::awake(PlotAgent,ptr);
+}
+
 void Plotter::Plot(Real*buf,int size)
 {
     double*arr=new double[size*2];
@@ -122,14 +147,13 @@ void Plotter::Plot(Real*buf,int size)
         arr[i]=i;
         arr[size+i]=buf[i];
     }
+    Ca_LinePoint* lp=NULL;
     Fl::lock();
     Ca_Canvas::current(m_canvas);
     m_y->current();
     m_canvas->clear();
-    m_line=new Ca_Line_Safe(size,arr,arr+size,FL_SOLID);
-    m_line->data=arr;
-    m_line->data_2=arr+size;
-    m_line->n=size;
+    for(int i=0;i<size;++i)
+        lp=new Ca_LinePoint(lp,arr[i],arr[i+size],0,FL_BLUE);
     m_canvas->redraw();
     Fl::unlock();
     delete[]arr;

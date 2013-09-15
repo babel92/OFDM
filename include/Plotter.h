@@ -50,6 +50,7 @@ class Plotter
         Plotter();
         void SetBGColor(float R,float G,float B);
         void Plot(Real*buf,int size);
+        void SafePlot(Real*buf,int size);
         void PlotSpectrum(Real*buf,int size);
         void SetXText(const char*label){Fl::lock();m_x->copy_label(label);Fl::unlock();}
         void SetXMin(double num){Fl::lock();m_x->minimum(num);Fl::unlock();}
@@ -57,6 +58,8 @@ class Plotter
         void SetYText(const char*label){Fl::lock();m_y->copy_label(label);Fl::unlock();}
         void SetYMin(double num){Fl::lock();m_y->minimum(num);Fl::unlock();}
         void SetYMax(double num){Fl::lock();m_y->maximum(num);Fl::unlock();}
+
+        void SetTitle(const char*title){m_window->copy_label(title);}
         virtual ~Plotter();
     protected:
     private:
@@ -68,7 +71,6 @@ class Plotter
         Ca_X_Axis*m_x;
         Ca_Y_Axis*m_y;
         Fl_Group*m_group;
-        Ca_Line_Safe*m_line;
         queue<DataPacket> m_pending;
 };
 
