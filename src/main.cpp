@@ -8,10 +8,11 @@ using namespace std;
 
 int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void*userdata)
 {
-
-    Plotter*plt=(Plotter*)userdata;
-
-    plt->PlotSpectrum((Sample*)input,framecount);
+    Sample buf[1024];
+    Plotter**plt=(Plotter**)userdata;
+    plt[0]->Plot((Real*)input,framecount);
+    FFT_R2Mod((Real*)input,buf,framecount);
+    plt[1]->Plot((Real*)buf,framecount/2);
     return paContinue;
 }
 
@@ -37,10 +38,22 @@ int main()
 
        fftw_free(out);
        fftw_destroy_plan(plan);*/
-    Plotter plt;
+    Plotter plt1,*plt[2],plt2;
+    plt[0]=&plt1;
+    plt[1]=&plt2;
+    plt[0]->SetXMax(512);
+    plt[0]->SetXMin(0);
+    plt[0]->SetYMax(1);
+    plt[0]->SetYMin(-1);
+    plt[0]->SetXText("Sample");
+    plt[0]->SetYText("Amplitude");
+
+    plt[1]->SetXMax(512/2);
+    plt[1]->SetXMin(0);
     Init_Portaudio();
 
-    Init_Portaudio_Record(RecCallback,&plt);
+    Init_Portaudio_Record(RecCallback,plt);
+
     while(1)
         Pa_Sleep(5000);
     Cleanup_Portaudio();

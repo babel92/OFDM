@@ -1,6 +1,8 @@
 #include "audio.h"
 #include "global.h"
 #include "portaudio/portaudio.h"
+#include "fftw/fftw3.h"
+#include "cmath"
 
 DataCallback UserRecordCallback;
 PaStream *RecordStream;
@@ -28,6 +30,15 @@ void Init_Portaudio()
     }
 }
 
+void FFT_R2Mod(Real*input,Real*output,int size)
+{
+    static fftwf_complex*mem=(fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*size);
+    static fftwf_plan plan=fftwf_plan_dft_r2c_1d(size,input,mem,FFTW_ESTIMATE);
+    fftwf_execute(plan);
+    for(int i=0;i<size/2;++i)
+        output[i]=sqrt(mem[i][0]*mem[i][0]+mem[i][1]*mem[i][1]);
+}
+
 void Init_Portaudio_Record(DataCallback cutecallback,void*userdata)
 {
     PaError err;
@@ -39,7 +50,7 @@ void Init_Portaudio_Record(DataCallback cutecallback,void*userdata)
                                 0,          /* stereo output */
                                 paFloat32,
                                 44100,
-                                1024,        /* frames per buffer, i.e. the number
+                                FRAME_SIZE,        /* frames per buffer, i.e. the number
                                                    of sample frames that PortAudio will
                                                    request from the callback. Many apps
                                                    may want to use

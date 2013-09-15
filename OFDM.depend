@@ -11,24 +11,27 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1379089124 source:f:\projects\ofdm\src\main.cpp
+1379209097 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
 	"plotter.h"
 
-1379088778 source:f:\projects\ofdm\src\audio.cpp
+1379198547 source:f:\projects\ofdm\src\audio.cpp
 	"audio.h"
 	"global.h"
 	"portaudio/portaudio.h"
+	"fftw/fftw3.h"
+	"cmath"
 
-1379052200 f:\projects\ofdm\include\global.h
+1379198547 f:\projects\ofdm\include\global.h
 	<cstdio>
 	<cstdlib>
 
 1379052200 f:\projects\ofdm\include\portaudio\portaudio.h
 
-1379052200 f:\projects\ofdm\include\audio.h
+1379198566 f:\projects\ofdm\include\audio.h
+	"global.h"
 	"portaudio/portaudio.h"
 
 1318470181 f:\projects\ofdm\include\plplot\plplot.h
@@ -157,21 +160,162 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1379089355 source:f:\projects\ofdm\src\plotter.cpp
+1379209074 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
-	<gl/glut.h>
+	<windows.h>
 	<process.h>
 	<cmath>
 
-1379087156 f:\projects\ofdm\include\plotter.h
+1379207693 f:\projects\ofdm\include\plotter.h
 	<queue>
 	"global.h"
 	"fftw/fftw3.h"
+	<FL/Fl.H>
+	<FL/Fl_Overlay_Window.H>
+	<FL/Fl_Button.H>
+	<FL/fl_draw.H>
+	"cartesian.h"
+	"jssynchornize.h"
 
 1379052200 f:\projects\ofdm\include\fftw\fftw3.h
 	<stdio.h>
 	<stddef.h>
 
-1347829007 f:\projects\ofdm\include\jssynchornize.h
+1379187164 f:\projects\ofdm\include\jssynchornize.h
 	<windows.h>
+
+1272238651 f:\projects\ofdm\include\cartesian.h
+	<FL/Fl_Box.H>
+
+1379209034 source:f:\projects\ofdm\src\cartesian.cpp
+	"Cartesian.H"
+	<stdio.h>
+	<string.h>
+	<math.h>
+	<stdlib.h>
+	<FL/fl_draw.H>
+	<FL/Fl.H>
+	<FL/Fl_Group.H>
+
+1345198686 c:\program files (x86)\fltk\include\fl\fl_box.h
+	"Fl_Widget.H"
+
+1335215526 c:\program files (x86)\fltk\include\fl\fl_widget.h
+	"Enumerations.H"
+	<stdint.h>
+	<stddef.h>
+
+1355082357 c:\program files (x86)\fltk\include\fl\enumerations.h
+	"Fl_Export.H"
+	"fl_types.h"
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_export.h
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_types.h
+
+1336497334 c:\program files (x86)\fltk\include\fl\fl_draw.h
+	<FL/x.H>
+	<FL/Enumerations.H>
+	<FL/Fl_Window.H>
+	<FL/Fl_Device.H>
+
+1332524873 c:\program files (x86)\fltk\include\fl\x.h
+	"Enumerations.H"
+	"win32.H"
+	"mac.H"
+	<X11/Xlib.h>
+	<X11/Xutil.h>
+	<X11/Xatom.h>
+	"Fl_Window.H"
+	"Xutf8.h"
+
+1331556950 c:\program files (x86)\fltk\include\fl\win32.h
+	<windows.h>
+	<FL/Fl_Window.H>
+
+1352238374 c:\program files (x86)\fltk\include\fl\fl_window.h
+	"Fl_Group.H"
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_group.h
+	"Fl_Widget.H"
+
+1352821542 c:\program files (x86)\fltk\include\fl\mac.h
+	<FL/Fl_Widget.H>
+	<ApplicationServices/ApplicationServices.h>
+	"Fl_Window.H"
+
+1311054570 c:\program files (x86)\fltk\include\fl\xutf8.h
+	<X11/X.h>
+	<X11/Xlib.h>
+	<X11/Xlocale.h>
+	<X11/Xutil.h>
+
+1352238374 c:\program files (x86)\fltk\include\fl\fl_device.h
+	<FL/x.H>
+	<FL/Fl_Plugin.H>
+	<FL/Fl_Image.H>
+	<FL/Fl_Bitmap.H>
+	<FL/Fl_Pixmap.H>
+	<FL/Fl_RGB_Image.H>
+	<stdlib.h>
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_plugin.h
+	"Fl_Preferences.H"
+
+1326890397 c:\program files (x86)\fltk\include\fl\fl_preferences.h
+	<stdio.h>
+	"Fl_Export.H"
+
+1352480528 c:\program files (x86)\fltk\include\fl\fl_image.h
+	"Enumerations.H"
+	<stdlib.h>
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_bitmap.h
+	"Fl_Image.H"
+
+1352238374 c:\program files (x86)\fltk\include\fl\fl_pixmap.h
+	"Fl_Image.H"
+	"x.H"
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_rgb_image.h
+	"Fl_Image.H"
+
+1350568591 c:\program files (x86)\fltk\include\fl\fl.h
+	<FL/Fl_Cairo.H>
+	"fl_utf8.h"
+	"Enumerations.H"
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_cairo.h
+	<FL/Fl_Export.H>
+	<cairo-xlib.h>
+	<cairo-win32.h>
+	<cairo-quartz.h>
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_utf8.h
+	"Fl_Export.H"
+	"fl_types.h"
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<sys/types.h>
+	<sys/stat.h>
+	<locale.h>
+	<ctype.h>
+	<wchar.h>
+	<sys/stat.h>
+	<sys/types.h>
+	<sys/stat.h>
+	"Xutf8.h"
+	<X11/Xlocale.h>
+	<X11/Xlib.h>
+	<locale.h>
+
+1343108242 c:\program files (x86)\fltk\include\fl\fl_overlay_window.h
+	"Fl_Double_Window.H"
+
+1343108242 c:\program files (x86)\fltk\include\fl\fl_double_window.h
+	"Fl_Window.H"
+
+1311054570 c:\program files (x86)\fltk\include\fl\fl_button.h
+	"Fl_Widget.H"
 

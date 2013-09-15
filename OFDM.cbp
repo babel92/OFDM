@@ -14,13 +14,15 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add directory="F:\Projects\OFDM\include" />
+					<Add directory="C:\Program Files (x86)\FLTK\include" />
 				</Compiler>
 				<Linker>
 					<Add option="-lfftw3f" />
 					<Add option="-lportaudio.dll" />
-					<Add option="-lglut" />
-					<Add option="-lopengl32" />
-					<Add option="-lglu32" />
+					<Add option="-loleaut32" />
+					<Add option="-lfltk -lole32" />
+					<Add option="-lgdi32" />
+					<Add option="-luuid -lcomctl32" />
 					<Add directory="libs" />
 				</Linker>
 			</Target>
@@ -41,6 +43,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include\Cartesian.H" />
+		<Unit filename="include\JSSynchornize.h" />
 		<Unit filename="include\Plotter.h" />
 		<Unit filename="include\audio.h" />
 		<Unit filename="include\fftw\fftw3.h" />
@@ -54,6 +58,7 @@
 		<Unit filename="include\portaudio\pa_win_waveformat.h" />
 		<Unit filename="include\portaudio\pa_win_wmme.h" />
 		<Unit filename="include\portaudio\portaudio.h" />
+		<Unit filename="src\Cartesian.cpp" />
 		<Unit filename="src\Plotter.cpp" />
 		<Unit filename="src\audio.cpp" />
 		<Unit filename="src\main.cpp" />
@@ -61,6 +66,15 @@
 			<code_completion />
 			<envvars />
 			<debugger />
+			<DoxyBlocks>
+				<comment_style block="0" line="0" />
+				<doxyfile_project />
+				<doxyfile_build />
+				<doxyfile_warnings />
+				<doxyfile_output />
+				<doxyfile_dot />
+				<general />
+			</DoxyBlocks>
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
