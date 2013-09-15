@@ -45,7 +45,7 @@ public:
 class Plotter
 {
     friend void PlotterThread(void*);
-    friend void APIENTRY APCWrapper(ULONG_PTR);
+    friend void APCWrapper(void*);
     public:
         Plotter();
         void SetBGColor(float R,float G,float B);

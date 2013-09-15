@@ -13,13 +13,13 @@ void Redraw(void*canvas)
     Fl::add_timeout(0,Redraw,canvas);
 }
 
-void APIENTRY APCWrapper(ULONG_PTR plotter);
+void APCWrapper(void* plotter);
 
 void PlotterThread(void*plotter)
 {
     Fl::lock();
     Plotter *ptr=(Plotter*)plotter;
-    APCWrapper((ULONG_PTR)plotter);
+    APCWrapper((void*)plotter);
 
     // Inform the ctor to return
     ptr->m_alerter.Pulse();
@@ -33,7 +33,7 @@ void PlotterThread(void*plotter)
     }
 }
 
-void APIENTRY APCWrapper(ULONG_PTR plotter)
+void APCWrapper(void* plotter)
 {
 
     Plotter *ptr=(Plotter*)plotter;
@@ -112,7 +112,7 @@ Plotter::Plotter()
         m_alerter.WaitForThis();
     }
     else
-        QueueUserAPC(APCWrapper,m_thread,(ULONG_PTR)this);
+        Fl::awake((Fl_Awake_Handler)APCWrapper,(void*)this);
     m_instance++;
 }
 

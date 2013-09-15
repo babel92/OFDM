@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#define FRAME_SIZE 512
+#define FRAME_SIZE 512*2
 
 typedef
 #ifdef USE_DOUBLE

@@ -8,12 +8,12 @@ using namespace std;
 
 int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void*userdata)
 {
-    Sample buf[1024];
+    Sample buf[FRAME_SIZE*2];
     RtlZeroMemory(buf,1024*sizeof(Sample));
     Plotter**plt=(Plotter**)userdata;
     plt[0]->Plot((Real*)input,framecount);
     FFT_R2Mod((Real*)input,buf,framecount);
-    plt[1]->Plot((Real*)buf,512);
+    plt[1]->Plot((Real*)buf,framecount/2);
     return paContinue;
 }
 
@@ -43,7 +43,7 @@ int main()
     plt[0]=&plt1;
     plt[1]=&plt2;
     plt[0]->SetTitle("Waveform");
-    plt[0]->SetXMax(512);
+    plt[0]->SetXMax(FRAME_SIZE);
     plt[0]->SetXMin(-10);
     plt[0]->SetYMax(1);
     plt[0]->SetYMin(-1);
@@ -51,9 +51,9 @@ int main()
     plt[0]->SetYText("Amplitude");
 
     plt[1]->SetTitle("Spectrum");
-    plt[1]->SetXMax(512/2);
+    plt[1]->SetXMax(FRAME_SIZE/2);
     plt[1]->SetXMin(0);
-    plt[1]->SetYMax(20);
+    plt[1]->SetYMax(40);
     plt[1]->SetYMin(0);
     Init_Portaudio();
 
