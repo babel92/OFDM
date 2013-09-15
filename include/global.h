@@ -4,7 +4,9 @@
 #include <cstdio>
 #include <cstdlib>
 
-#define FRAME_SIZE 512*2
+#define FRAME_SIZE (512*2)
+#define SAMPLE_RATE (44100)
+#define SAMPLE_TIME (1./SAMPLE_RATE)
 
 typedef
 #ifdef USE_DOUBLE

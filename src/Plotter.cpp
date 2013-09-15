@@ -29,7 +29,7 @@ void PlotterThread(void*plotter)
 
     while(Fl::wait()>0)
     {
-        SleepEx(0,1);
+
     }
 }
 
