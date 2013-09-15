@@ -482,7 +482,8 @@ void Ca_X_Axis::draw(){
     int _w=0;
     int _h=0; //temporary coordinates for ticks
     double _pos,_x;
-    //fl_clip(x()+Fl::box_dx(box()),y()+Fl::box_dy(box()),w()-Fl::box_dw(box()),h()-Fl::box_dh(box()));
+
+    //fl_clip(x()+Fl::box_dx(box()), y()+Fl::box_dy(box()), w()-Fl::box_dw(box()), h()-Fl::box_dh(box()));
     fl_color(axis_color_);
     int a=y()+Fl::box_dh(box())+border_;
     int b=a+h()-Fl::box_dh(box())-2*border_;
@@ -598,7 +599,7 @@ void Ca_X_Axis::draw(){
       fl_end_line();
     }
     fl_line_style(0,0);
-    //  fl_pop_clip();
+      //fl_pop_clip();
   }
 };
 

@@ -38,11 +38,11 @@ void APCWrapper(void* plotter)
 
     Plotter *ptr=(Plotter*)plotter;
 
-    ptr->m_window = new Fl_Double_Window(580, 380, "Plotter");
+    ptr->m_window = new Fl_Window(580, 390, "Plotter");
     ptr->m_window->size_range(450,250);
 
 
-    ptr->m_group =new Fl_Group(0, 0, 580, 380 );
+    ptr->m_group =new Fl_Group(0, 0, 580, 390 );
 
     ptr->m_group->box(FL_DOWN_BOX);
     ptr->m_group->align(FL_ALIGN_TOP|FL_ALIGN_INSIDE);
@@ -116,47 +116,35 @@ Plotter::Plotter()
     m_instance++;
 }
 
-struct PlotData
-{
-    Plotter*plt;
-    Real*buf;
-    int size;
-};
-
 void PlotAgent(void*plotter)
 {
-    PlotData *ptr=(PlotData*)plotter;
-    ptr->plt->Plot(ptr->buf,ptr->size);
-    delete ptr;
-}
 
-void Plotter::SafePlot(Real*buf,int size)
-{
-    PlotData *ptr=new PlotData;
-    ptr->plt=this;
-    ptr->buf=buf;
-    ptr->size=size;
-    Fl::awake(PlotAgent,ptr);
 }
 
 void Plotter::Plot(Real*buf,int size)
 {
-    double*arr=new double[size*2];
-    for(int i=0; i<size; ++i)
-    {
-        arr[i]=i;
-        arr[size+i]=buf[i];
-    }
     Ca_LinePoint* lp=NULL;
     Fl::lock();
     Ca_Canvas::current(m_canvas);
     m_y->current();
     m_canvas->clear();
     for(int i=0;i<size;++i)
-        lp=new Ca_LinePoint(lp,arr[i],arr[i+size],0,FL_BLUE);
+        lp=new Ca_LinePoint(lp,i,buf[i],0,FL_BLUE);
     m_canvas->redraw();
     Fl::unlock();
-    delete[]arr;
+}
+
+void Plotter::Plot2D(Real*data1,Real*data2,int size)
+{
+    Ca_LinePoint* lp=NULL;
+    Fl::lock();
+    Ca_Canvas::current(m_canvas);
+    m_y->current();
+    m_canvas->clear();
+    for(int i=0;i<size;++i)
+        lp=new Ca_LinePoint(lp,data1[i],data2[i],0,FL_BLUE);
+    m_canvas->redraw();
+    Fl::unlock();
 }
 
 Plotter::~Plotter()

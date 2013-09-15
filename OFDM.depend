@@ -11,18 +11,19 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1379229167 source:f:\projects\ofdm\src\main.cpp
+1379259965 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
 	"plotter.h"
 
-1379198547 source:f:\projects\ofdm\src\audio.cpp
+1379259732 source:f:\projects\ofdm\src\audio.cpp
 	"audio.h"
 	"global.h"
 	"portaudio/portaudio.h"
 	"fftw/fftw3.h"
 	"cmath"
+	<cstring>
 
 1379229330 f:\projects\ofdm\include\global.h
 	<cstdio>
@@ -160,13 +161,13 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1379229207 source:f:\projects\ofdm\src\plotter.cpp
+1379260159 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
 	<windows.h>
 	<process.h>
 	<cmath>
 
-1379229233 f:\projects\ofdm\include\plotter.h
+1379260009 f:\projects\ofdm\include\plotter.h
 	<queue>
 	"global.h"
 	"fftw/fftw3.h"
@@ -187,7 +188,7 @@
 1379224671 f:\projects\ofdm\include\cartesian.h
 	<FL/Fl_Box.H>
 
-1379210203 source:f:\projects\ofdm\src\cartesian.cpp
+1379264089 source:f:\projects\ofdm\src\cartesian.cpp
 	"Cartesian.H"
 	<stdio.h>
 	<string.h>

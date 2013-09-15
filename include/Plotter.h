@@ -51,6 +51,8 @@ class Plotter
         void SetBGColor(float R,float G,float B);
         void Plot(Real*buf,int size);
         void SafePlot(Real*buf,int size);
+        void Plot2D(Real*data1,Real*data2,int size);
+
         void PlotSpectrum(Real*buf,int size);
         void SetXText(const char*label){Fl::lock();m_x->copy_label(label);Fl::unlock();}
         void SetXMin(double num){Fl::lock();m_x->minimum(num);Fl::unlock();}
@@ -66,7 +68,7 @@ class Plotter
         JSEvent m_alerter;
         static int m_instance;
         static HANDLE m_thread;
-        Fl_Double_Window*m_window;
+        Fl_Window*m_window;
         Ca_Canvas*m_canvas;
         Ca_X_Axis*m_x;
         Ca_Y_Axis*m_y;

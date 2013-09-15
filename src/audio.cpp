@@ -3,6 +3,7 @@
 #include "portaudio/portaudio.h"
 #include "fftw/fftw3.h"
 #include "cmath"
+#include <cstring>
 
 DataCallback UserRecordCallback;
 PaStream *RecordStream;
@@ -30,10 +31,14 @@ void Init_Portaudio()
     }
 }
 
+/** This function has static ptrs which are initialized by arg size
+ *  during the first call, so never use changing size
+ */
 void FFT_R2Mod(Real*input,Real*output,int size)
 {
     static fftwf_complex*mem=(fftwf_complex*)fftwf_malloc(sizeof(fftwf_complex)*size);
     static fftwf_plan plan=fftwf_plan_dft_r2c_1d(size,input,mem,FFTW_ESTIMATE);
+
     fftwf_execute(plan);
     for(int i=0;i<size/2;++i)
         output[i]=sqrt(mem[i][0]*mem[i][0]+mem[i][1]*mem[i][1]);
