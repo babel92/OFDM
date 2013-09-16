@@ -11,7 +11,7 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1379309712 source:f:\projects\ofdm\src\main.cpp
+1379358848 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
@@ -25,9 +25,12 @@
 	"cmath"
 	<cstring>
 
-1379229330 f:\projects\ofdm\include\global.h
+1379358814 f:\projects\ofdm\include\global.h
 	<cstdio>
 	<cstdlib>
+	<stdint.h>
+	<cstdarg>
+	<FL/Fl.H>
 
 1379052200 f:\projects\ofdm\include\portaudio\portaudio.h
 
@@ -161,13 +164,13 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1379260159 source:f:\projects\ofdm\src\plotter.cpp
+1379358848 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
 	<windows.h>
 	<process.h>
 	<cmath>
 
-1379260009 f:\projects\ofdm\include\plotter.h
+1379358814 f:\projects\ofdm\include\plotter.h
 	<queue>
 	"global.h"
 	"fftw/fftw3.h"
@@ -319,4 +322,6 @@
 
 1311054570 c:\program files (x86)\fltk\include\fl\fl_button.h
 	"Fl_Widget.H"
+
+1379357472 source:f:\projects\ofdm\src\safecall.asm
 

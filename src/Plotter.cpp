@@ -1,8 +1,9 @@
 #include "Plotter.h"
+
 #include <windows.h>
 #include <process.h>
 #include <cmath>
-#include <cstdarg>
+
 
 
 using namespace std;
@@ -99,8 +100,11 @@ void APCWrapper(void* plotter)
 }
 
 HANDLE Plotter::m_thread;
+DWORD Plotter::m_tid;
 
-
+extern "C" DWORD WINAPI GetThreadId(
+    HANDLE Thread
+);
 
 Plotter::Plotter()
     :m_alerter()
@@ -109,6 +113,7 @@ Plotter::Plotter()
     if(!m_thread)
     {
         m_thread=(HANDLE)_beginthread(PlotterThread,0,this);
+        m_tid=GetThreadId(m_thread);
         m_alerter.WaitForThis();
     }
     else
@@ -116,17 +121,16 @@ Plotter::Plotter()
     m_instance++;
 }
 
-typedef void (*VarArgFunc)(...);
-
-struct CallContext
+void SafeCallAgentCLayer(void*context)
 {
-    void*proc;
-    int argnum;
-    uint32_t args[14];
-};
+    SafeThisCallAgent(context);
+    free(context);
+}
 
 void Plotter::Plot(Real*buf,int size)
 {
+    GUARD(&Plotter::Plot,3,this,buf,size);
+
     Ca_LinePoint* lp=NULL;
     Fl::lock();
     Ca_Canvas::current(m_canvas);
@@ -140,6 +144,8 @@ void Plotter::Plot(Real*buf,int size)
 
 void Plotter::Plot2D(Real*data1,Real*data2,int size)
 {
+    GUARD(&Plotter::Plot2D,4,this,data1,data2,size);
+
     Ca_LinePoint* lp=NULL;
     Fl::lock();
     Ca_Canvas::current(m_canvas);

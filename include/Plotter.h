@@ -48,6 +48,9 @@ class Plotter
     friend void APCWrapper(void*);
     public:
         Plotter();
+
+        bool InvokeRequired(){return GetCurrentThreadId()!=m_tid;}
+
         void SetBGColor(float R,float G,float B);
         void Plot(Real*buf,int size);
         void SafePlot(Real*buf,int size);
@@ -68,6 +71,7 @@ class Plotter
         JSEvent m_alerter;
         static int m_instance;
         static HANDLE m_thread;
+        static DWORD m_tid;
         Fl_Window*m_window;
         Ca_Canvas*m_canvas;
         Ca_X_Axis*m_x;
@@ -75,5 +79,13 @@ class Plotter
         Fl_Group*m_group;
         queue<DataPacket> m_pending;
 };
+
+#define GUARD(func,size,...) {\
+    if(InvokeRequired())\
+    {\
+        Invoke(func,size,##__VA_ARGS__);\
+        return;\
+    }}
+
 
 #endif // PLOTTER_H
