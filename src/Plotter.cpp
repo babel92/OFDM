@@ -61,8 +61,8 @@ void APCWrapper(void* plotter)
     ptr->m_x->labelsize(14);
     ptr->m_x->align(FL_ALIGN_BOTTOM);
     ptr->m_x->scale(CA_LIN);
-    ptr->m_x->minimum(0);
-    ptr->m_x->maximum(100);
+    ptr->m_x->minimum(ptr->m_xmin);
+    ptr->m_x->maximum(ptr->m_xmax);
     ptr->m_x->label_format("%g");
     ptr->m_x->minor_grid_color(fl_gray_ramp(20));
     ptr->m_x->major_grid_color(fl_gray_ramp(15));
@@ -79,8 +79,8 @@ void APCWrapper(void* plotter)
     ptr->m_y->align(FL_ALIGN_LEFT|FL_ALIGN_TOP);
 
     //ptr->m_yalign(FL_ALIGN_TOP_RIGHT);
-    ptr->m_y->minimum(0);
-    ptr->m_y->maximum(100);
+    ptr->m_y->minimum(ptr->m_ymin);
+    ptr->m_y->maximum(ptr->m_ymax);
     ptr->m_y->minor_grid_style(FL_DASH);
     ptr->m_y->axis_align(CA_LEFT);
     ptr->m_y->axis_color(FL_BLACK);
@@ -106,8 +106,8 @@ extern "C" DWORD WINAPI GetThreadId(
     HANDLE Thread
 );
 
-Plotter::Plotter()
-    :m_alerter()
+Plotter::Plotter(double xmin,double xmax,double ymin,double ymax)
+    :m_alerter(),m_xmin(xmin),m_ymin(ymin),m_xmax(xmax),m_ymax(ymax)
 {
     //ctor
     if(!m_thread)

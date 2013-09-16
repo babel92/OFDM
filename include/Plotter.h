@@ -47,7 +47,7 @@ class Plotter
     friend void PlotterThread(void*);
     friend void APCWrapper(void*);
     public:
-        Plotter();
+        Plotter(double xmin=0,double xmax=100,double ymin=0,double ymax=100);
 
         bool InvokeRequired(){return GetCurrentThreadId()!=m_tid;}
 
@@ -72,6 +72,7 @@ class Plotter
         static int m_instance;
         static HANDLE m_thread;
         static DWORD m_tid;
+        double m_xmin,m_xmax,m_ymin,m_ymax;
         Fl_Window*m_window;
         Ca_Canvas*m_canvas;
         Ca_X_Axis*m_x;

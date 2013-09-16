@@ -27,22 +27,16 @@ int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void
 
 int main()
 {
-    Plotter plt1,*plt[2],plt2;
+    Plotter plt1(0,SAMPLE_TIME*FRAME_SIZE,-1,1),*plt[2],plt2(0,FRAME_SIZE/2,0,40);
     plt[0]=&plt1;
     plt[1]=&plt2;
     plt[0]->SetTitle("Waveform");
-    plt[0]->SetXMax(SAMPLE_TIME*FRAME_SIZE);
-    plt[0]->SetXMin(0);
-    plt[0]->SetYMax(1);
-    plt[0]->SetYMin(-1);
+
     plt[0]->SetXText("Sample");
     plt[0]->SetYText("Amplitude");
 
     plt[1]->SetTitle("Spectrum");
-    plt[1]->SetXMax(FRAME_SIZE/2);
-    plt[1]->SetXMin(0);
-    plt[1]->SetYMax(40);
-    plt[1]->SetYMin(0);
+
 
     Init_Portaudio();
     Init_Portaudio_Record(RecCallback,plt);
