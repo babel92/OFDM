@@ -40,7 +40,7 @@ void APCWrapper(void* plotter)
 
     Plotter *ptr=(Plotter*)plotter;
 
-    ptr->m_window = new Fl_Window(580, 390, "Plotter");
+    ptr->m_window = new Fl_Double_Window(580, 390, "Plotter");
     ptr->m_window->size_range(450,250);
 
 

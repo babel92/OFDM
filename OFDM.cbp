@@ -60,12 +60,14 @@
 		<Unit filename="include\portaudio\pa_win_waveformat.h" />
 		<Unit filename="include\portaudio\pa_win_wmme.h" />
 		<Unit filename="include\portaudio\portaudio.h" />
+		<Unit filename="include\safecall.h" />
 		<Unit filename="src\Cartesian.cpp" />
 		<Unit filename="src\Plotter.cpp" />
 		<Unit filename="src\audio.cpp" />
 		<Unit filename="src\main.cpp" />
-		<Unit filename="src\safecall.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -g -fwin32 -o $object $file" />
+		<Unit filename="src\safecall.cpp" />
+		<Unit filename="src\safecall_asm.asm">
+			<Option compiler="gcc" use="1" buildCommand="nasm -fwin32 -o $object $file" />
 		</Unit>
 		<Extensions>
 			<code_completion />

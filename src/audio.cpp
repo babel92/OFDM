@@ -20,7 +20,6 @@ int Pa_RecordStream( const void *input,
     return UserRecordCallback(input,output,frameCount,0,userData);
 }
 
-
 void Init_Portaudio()
 {
     PaError err=Pa_Initialize();
