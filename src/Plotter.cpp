@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <process.h>
 #include <cmath>
+#include <cstdarg>
 
 
 using namespace std;
@@ -71,7 +72,6 @@ void APCWrapper(void* plotter)
     ptr->m_x->axis_color(FL_BLACK);
     ptr->m_x->axis_align(CA_BOTTOM|CA_LINE);
 
-
     ptr->m_y = new Ca_Y_Axis(5, 30, 43, 235 /*, "I [mA]" */);
 
     ptr->m_y->label("Y");
@@ -116,10 +116,14 @@ Plotter::Plotter()
     m_instance++;
 }
 
-void PlotAgent(void*plotter)
-{
+typedef void (*VarArgFunc)(...);
 
-}
+struct CallContext
+{
+    void*proc;
+    int argnum;
+    uint32_t args[14];
+};
 
 void Plotter::Plot(Real*buf,int size)
 {
