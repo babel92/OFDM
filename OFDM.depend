@@ -11,11 +11,12 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1379358848 source:f:\projects\ofdm\src\main.cpp
+1379363154 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
 	"plotter.h"
+	"safecall.h"
 
 1379259732 source:f:\projects\ofdm\src\audio.cpp
 	"audio.h"
@@ -25,7 +26,7 @@
 	"cmath"
 	<cstring>
 
-1379358814 f:\projects\ofdm\include\global.h
+1379361377 f:\projects\ofdm\include\global.h
 	<cstdio>
 	<cstdlib>
 	<stdint.h>
@@ -164,11 +165,12 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1379358848 source:f:\projects\ofdm\src\plotter.cpp
+1379362034 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
 	<windows.h>
 	<process.h>
 	<cmath>
+	"safecall.h"
 
 1379358814 f:\projects\ofdm\include\plotter.h
 	<queue>
@@ -324,4 +326,12 @@
 	"Fl_Widget.H"
 
 1379357472 source:f:\projects\ofdm\src\safecall.asm
+
+1379363081 f:\projects\ofdm\include\safecall.h
+	"global.h"
+
+1379363105 source:f:\projects\ofdm\src\safecall.cpp
+	"safecall.h"
+
+1379364107 source:f:\projects\ofdm\src\safecall_asm.asm
 

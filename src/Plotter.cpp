@@ -3,7 +3,7 @@
 #include <windows.h>
 #include <process.h>
 #include <cmath>
-
+#include "safecall.h"
 
 
 using namespace std;
@@ -119,12 +119,6 @@ Plotter::Plotter()
     else
         Fl::awake((Fl_Awake_Handler)APCWrapper,(void*)this);
     m_instance++;
-}
-
-void SafeCallAgentCLayer(void*context)
-{
-    SafeThisCallAgent(context);
-    free(context);
 }
 
 void Plotter::Plot(Real*buf,int size)

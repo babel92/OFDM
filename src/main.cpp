@@ -2,7 +2,7 @@
 #include "audio.h"
 #include <iostream>
 #include "plotter.h"
-
+#include "safecall.h"
 
 using namespace std;
 
@@ -43,8 +43,8 @@ int main()
     plt[1]->SetXMin(0);
     plt[1]->SetYMax(40);
     plt[1]->SetYMin(0);
-    Init_Portaudio();
 
+    Init_Portaudio();
     Init_Portaudio_Record(RecCallback,plt);
 
     while(1)
