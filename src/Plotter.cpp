@@ -2,9 +2,9 @@
 
 #include <windows.h>
 #include <process.h>
-#include <cmath>
-#include "safecall.h"
 
+
+#include "safecall.h"
 
 using namespace std;
 
@@ -123,7 +123,7 @@ Plotter::Plotter(double xmin,double xmax,double ymin,double ymax)
 
 void Plotter::Plot(Real*buf,int size)
 {
-    GUARD(&Plotter::Plot,3,this,buf,size);
+    GUARD(Plotter::Plot,this,buf,size);
 
     Ca_LinePoint* lp=NULL;
     Fl::lock();
@@ -138,7 +138,7 @@ void Plotter::Plot(Real*buf,int size)
 
 void Plotter::Plot2D(Real*data1,Real*data2,int size)
 {
-    GUARD(&Plotter::Plot2D,4,this,data1,data2,size);
+    GUARD(Plotter::Plot2D,this,data1,data2,size);
 
     Ca_LinePoint* lp=NULL;
     Fl::lock();

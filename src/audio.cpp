@@ -2,7 +2,7 @@
 #include "global.h"
 #include "portaudio/portaudio.h"
 #include "fftw/fftw3.h"
-#include "cmath"
+#include <math.h>
 #include <cstring>
 
 DataCallback UserRecordCallback;

@@ -21,3 +21,15 @@ void Invoke(void*proc,int argnum,...)
         context->args[i]=va_arg(args,uint32_t);
     Fl::awake(SafeCallAgentCLayer,context);
 }
+
+void SafeBindCallAgent(void*proc)
+{
+    std::function<void()>* wrapper = reinterpret_cast<std::function<void()>*>(proc);
+    (*wrapper)();
+    delete wrapper;
+}
+
+void Invoke(std::function<void()>*proc)
+{
+    Fl::awake(SafeBindCallAgent,(void*)proc);
+}

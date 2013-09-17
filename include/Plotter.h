@@ -81,10 +81,11 @@ class Plotter
         queue<DataPacket> m_pending;
 };
 
-#define GUARD(func,size,...) {\
+#define GUARD(func,...) {\
     if(InvokeRequired())\
     {\
-        Invoke(func,size,##__VA_ARGS__);\
+        /*Invoke(func,size,##__VA_ARGS__)*/\
+        Invoke(new std::function<void()>(std::bind(&func,##__VA_ARGS__ )));\
         return;\
     }}
 

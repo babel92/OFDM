@@ -2,6 +2,7 @@
 #define SAFECALL_H_INCLUDED
 
 #include "global.h"
+#include <functional>
 
 struct CallContext
 {
@@ -35,6 +36,7 @@ void Invoke(myType proc,int argnum,...)
     Fl::awake(SafeCallAgentCLayer,context);
 }
 
+void Invoke(std::function<void()>*proc);
 void Invoke(void*proc,int argnum,...);
 
 #endif // SAFECALL_H_INCLUDED
