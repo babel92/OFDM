@@ -84,8 +84,7 @@ class Plotter
 #define GUARD(func,...) {\
     if(InvokeRequired())\
     {\
-        /*Invoke(func,size,##__VA_ARGS__)*/\
-        Invoke(new std::function<void()>(std::bind(&func,##__VA_ARGS__ )));\
+        Invoke(WRAPCALL(&func,__VA_ARGS__));\
         return;\
     }}
 

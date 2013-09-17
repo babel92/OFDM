@@ -39,4 +39,6 @@ void Invoke(myType proc,int argnum,...)
 void Invoke(std::function<void()>*proc);
 void Invoke(void*proc,int argnum,...);
 
+#define WRAPCALL(...) (new std::function<void()>(std::bind(__VA_ARGS__)))
+
 #endif // SAFECALL_H_INCLUDED

@@ -1,9 +1,6 @@
 #include "Plotter.h"
-
 #include <windows.h>
 #include <process.h>
-
-
 #include "safecall.h"
 
 using namespace std;
@@ -37,15 +34,13 @@ void PlotterThread(void*plotter)
 
 void APCWrapper(void* plotter)
 {
-
     Plotter *ptr=(Plotter*)plotter;
 
     ptr->m_window = new Fl_Double_Window(580, 390, "Plotter");
     ptr->m_window->size_range(450,250);
-
+    ptr->m_window->callback([](Fl_Widget*w,void*arg) { w->hide();delete (Plotter*)arg; },(void*)ptr);
 
     ptr->m_group =new Fl_Group(0, 0, 580, 390 );
-
     ptr->m_group->box(FL_DOWN_BOX);
     ptr->m_group->align(FL_ALIGN_TOP|FL_ALIGN_INSIDE);
 
@@ -54,7 +49,6 @@ void APCWrapper(void* plotter)
     ptr->m_canvas->color(7);
     ptr->m_canvas->align(FL_ALIGN_TOP);
     Fl_Group::current()->resizable(ptr->m_canvas);
-    // w->resizable(canvas);
     ptr->m_canvas->border(15);
 
     ptr->m_x = new Ca_X_Axis(140, 335, 300, 30, "X");
@@ -74,10 +68,8 @@ void APCWrapper(void* plotter)
     ptr->m_x->axis_align(CA_BOTTOM|CA_LINE);
 
     ptr->m_y = new Ca_Y_Axis(5, 30, 43, 235 /*, "I [mA]" */);
-
     ptr->m_y->label("Y");
     ptr->m_y->align(FL_ALIGN_LEFT|FL_ALIGN_TOP);
-
     //ptr->m_yalign(FL_ALIGN_TOP_RIGHT);
     ptr->m_y->minimum(ptr->m_ymin);
     ptr->m_y->maximum(ptr->m_ymax);
@@ -86,15 +78,10 @@ void APCWrapper(void* plotter)
     ptr->m_y->axis_color(FL_BLACK);
 
     ptr->m_y->current();
-
-    new Ca_Bar(7000, 12000, 0.0011, 0.9, FL_RED,  FL_BLACK, 4,  "Bar", FL_ALIGN_TOP, FL_HELVETICA);
-    new Ca_Bar(5000, 10000, 0.0011, 0.4, FL_GREEN,  FL_BLACK, 4,  "Sec.\nbar", FL_ALIGN_TOP|FL_ALIGN_INSIDE, FL_HELVETICA);
-
-
-
     ptr->m_group->end();
 
     Fl_Group::current()->resizable(ptr->m_group);
+
     ptr->m_window->end();
     ptr->m_window->show();
 }
@@ -117,7 +104,7 @@ Plotter::Plotter(double xmin,double xmax,double ymin,double ymax)
         m_alerter.WaitForThis();
     }
     else
-        Fl::awake((Fl_Awake_Handler)APCWrapper,(void*)this);
+        Invoke(WRAPCALL(APCWrapper,this));
     m_instance++;
 }
 
@@ -126,14 +113,12 @@ void Plotter::Plot(Real*buf,int size)
     GUARD(Plotter::Plot,this,buf,size);
 
     Ca_LinePoint* lp=NULL;
-    Fl::lock();
     Ca_Canvas::current(m_canvas);
     m_y->current();
     m_canvas->clear();
     for(int i=0;i<size;++i)
         lp=new Ca_LinePoint(lp,i,buf[i],0,FL_BLUE);
     m_canvas->redraw();
-    Fl::unlock();
 }
 
 void Plotter::Plot2D(Real*data1,Real*data2,int size)
@@ -141,17 +126,18 @@ void Plotter::Plot2D(Real*data1,Real*data2,int size)
     GUARD(Plotter::Plot2D,this,data1,data2,size);
 
     Ca_LinePoint* lp=NULL;
-    Fl::lock();
     Ca_Canvas::current(m_canvas);
     m_y->current();
     m_canvas->clear();
     for(int i=0;i<size;++i)
         lp=new Ca_LinePoint(lp,data1[i],data2[i],0,FL_BLUE);
     m_canvas->redraw();
-    Fl::unlock();
 }
 
 Plotter::~Plotter()
 {
+    m_instance--;
+    if(!m_instance)
+        exit(0);
     //dtor
 }

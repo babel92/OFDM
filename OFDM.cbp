@@ -12,9 +12,7 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-std=c++11" />
 					<Add option="-g" />
-					<Add option="-DWIN32" />
 					<Add directory="F:\Projects\OFDM\include" />
 					<Add directory="C:\Program Files (x86)\FLTK\include" />
 				</Compiler>
@@ -33,8 +31,10 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-DWIN32" />
 			<Add directory="F:\Projects\OFDM\include" />
 			<Add directory="C:\Program Files (x86)\FLTK\include" />
 		</Compiler>

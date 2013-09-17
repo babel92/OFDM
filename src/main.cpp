@@ -8,35 +8,37 @@ using namespace std;
 
 int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void*userdata)
 {
-    static Sample buf[FRAME_SIZE*2]={0};
+    static Sample axis[FRAME_SIZE*2]={0};
+    Sample buf[FRAME_SIZE];
     static bool init=0;
     if(!init)
     {
         for(int i=0;i<FRAME_SIZE;++i)
-            buf[i]=SAMPLE_TIME*i;
+        {
+            axis[i]=SAMPLE_TIME*i;
+            axis[i+FRAME_SIZE]=i*SAMPLE_RATE/FRAME_SIZE;
+        }
         init=1;
     }
     Plotter**plt=(Plotter**)userdata;
-    plt[0]->Plot2D(buf,(Real*)input,framecount);
+    plt[0]->Plot2D(axis,(Real*)input,framecount);
 
     /* This call ruins the input */
-    FFT_R2Mod((Real*)input,buf+FRAME_SIZE,framecount);
-    plt[1]->Plot((Real*)(buf+FRAME_SIZE),framecount/2);
+    FFT_R2Mod((Real*)input,buf,framecount);
+    plt[1]->Plot2D(axis+framecount,(Real*)buf,framecount/2);
     return paContinue;
 }
 
 int main()
 {
-    Plotter plt1(0,SAMPLE_TIME*FRAME_SIZE,-1,1),*plt[2],plt2(0,FRAME_SIZE/2,0,40);
-    plt[0]=&plt1;
-    plt[1]=&plt2;
-    plt[0]->SetTitle("Waveform");
+    Plotter *plt[2]={new Plotter(0,SAMPLE_TIME*FRAME_SIZE,-1,1),new Plotter(0,SAMPLE_RATE/2,0,40)};
 
+    plt[0]->SetTitle("Waveform");
     plt[0]->SetXText("Sample");
     plt[0]->SetYText("Amplitude");
 
     plt[1]->SetTitle("Spectrum");
-
+    plt[1]->SetXText("Frequency (Hz)");
 
     Init_Portaudio();
     Init_Portaudio_Record(RecCallback,plt);
