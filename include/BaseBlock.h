@@ -69,7 +69,10 @@ class BaseBlock
         DataInterface m_in_ports;
         DataInterface m_out_ports;
         virtual int Work(DataInterface*In,DataInterface*Out)=0;
+        int Wrapper();
     private:
 };
+
+
 
 #endif // BASEBLOCK_H

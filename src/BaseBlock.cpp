@@ -61,3 +61,15 @@ BaseBlock::~BaseBlock()
 {
     //dtor
 }
+
+int BaseBlock::Wrapper()
+{
+
+
+    //test the return value
+    //mem allocation for out ports should be done in Work()
+    Work(&m_in_ports,&m_out_ports);
+
+    //clean up memory by checking ref count
+    return 0;
+}
