@@ -47,6 +47,7 @@
 			<Add option="-luuid -lcomctl32" />
 			<Add directory="libs" />
 		</Linker>
+		<Unit filename="include\BaseBlock.h" />
 		<Unit filename="include\Cartesian.H" />
 		<Unit filename="include\JSSynchornize.h" />
 		<Unit filename="include\Plotter.h" />
@@ -63,6 +64,7 @@
 		<Unit filename="include\portaudio\pa_win_wmme.h" />
 		<Unit filename="include\portaudio\portaudio.h" />
 		<Unit filename="include\safecall.h" />
+		<Unit filename="src\BaseBlock.cpp" />
 		<Unit filename="src\Cartesian.cpp" />
 		<Unit filename="src\Plotter.cpp" />
 		<Unit filename="src\audio.cpp" />

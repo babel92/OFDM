@@ -43,7 +43,7 @@ int main()
     Init_Portaudio();
     Init_Portaudio_Record(RecCallback,plt);
 
-    while(1)
+    while(1);
         Pa_Sleep(5000);
     Cleanup_Portaudio();
 
