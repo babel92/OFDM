@@ -27,7 +27,7 @@ void Data::Delete()
  *
  ****************************************************/
 
-DataPin::DataPin(DataInterface*interface, int type)
+DataPin::DataPin(BaseBlock*interface, int type)
 :m_parent(interface)
 ,m_type(type)
 {
@@ -59,13 +59,18 @@ inline bool DataPinOut::Exist(DataPinIn*target)
     return find(m_target.begin(),m_target.end(),target)!=m_target.end();
 }
 
-void DataPinOut::SetData(Data* data)
+void DataPinOut::Ready()
 {
-    m_data=data;
     for(vector<DataPinIn*>::iterator it=m_target.begin();it<m_target.end();++it)
     {
         (*it)->Ready();
     }
+}
+
+void DataPinOut::SetData(Data* data)
+{
+    m_data=data;
+    Ready();
 }
 
 
@@ -73,7 +78,7 @@ void DataPinOut::SetData(Data* data)
  *
  ****************************************************/
 
-DataPinIn::DataPinIn(DataInterface*interface, int type, DataPin* target)
+DataPinIn::DataPinIn(BaseBlock*interface, int type, DataPin* target)
 :DataPin(interface,type)
 ,m_valid(0)
 ,m_target(NULL)
@@ -110,7 +115,7 @@ void DataPinIn::Ready()
 /****************************************************
  *
  ****************************************************/
-
+/*
 DataInterface::DataInterface(BaseBlock*block)
 :m_parent(block)
 ,m_valid(0)
@@ -120,9 +125,9 @@ DataInterface::DataInterface(BaseBlock*block)
 
 void DataInterface::FreeData()
 {
-    for(vector<DataPin*>::iterator it=m_pin.begin();it<m_pin.end();++it)
+    for(vector<PinType*>::iterator it=m_pin.begin();it<m_pin.end();++it)
     {
-        static_cast<DataPinOut*>(*it)->FreeData();
+        (*it)->FreeData();
     }
 }
 
@@ -133,14 +138,13 @@ void DataInterface::Ready()
     else
         m_parent->Wrapper();
 }
-
+*/
 /****************************************************
  *
  ****************************************************/
 
 BaseBlock::BaseBlock()
-:m_in_ports(this)
-,m_out_ports(this)
+:m_valid(0)
 {
     //ctor
 
@@ -154,12 +158,24 @@ BaseBlock::~BaseBlock()
 int BaseBlock::Wrapper()
 {
 
-
     //test the return value
     //mem allocation for out ports should be done in Work()
     Work(&m_in_ports,&m_out_ports);
 
+
     //clean up memory by checking ref count
-    m_in_ports.FreeData();
+    for(vector<DataPinIn*>::iterator it=m_in_ports.begin();it<m_in_ports.end();++it)
+        (*it)->FreeData();
     return 0;
+}
+
+void BaseBlock::Ready()
+{
+    if(m_valid<(int)m_in_ports.size()-1)
+        m_valid++;
+    else
+    {
+        m_valid=0;
+        Wrapper();
+    }
 }

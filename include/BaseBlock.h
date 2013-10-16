@@ -31,11 +31,11 @@ public:
 class DataPin
 {
 public:
-    DataPin(DataInterface*interface, int type);
+    DataPin(BaseBlock*parent, int type);
     int GetType(){return m_type;}
     virtual ~DataPin();
 protected:
-    DataInterface* m_parent;
+    BaseBlock* m_parent;
     int m_type;
     //vector<DataPin*> m_target;
 };
@@ -44,11 +44,12 @@ class DataPinOut: public DataPin
 {
     friend class DataPinIn;
 public:
-    DataPinOut(DataInterface*interface, int type, DataPin* target):DataPin(interface,type){}
+    DataPinOut(BaseBlock*interface, int type, DataPin* target):DataPin(interface,type){}
     ~DataPinOut();
 
     int Connect(DataPinIn*target);
     void SetData(Data* data);
+    void Ready();
     Data* GetData(){return m_data;}
     void FreeData(){m_data->Delete();};
 protected:
@@ -59,23 +60,24 @@ protected:
 };
 
 
+
 class DataPinIn: public DataPin
 {
     friend class DataPinOut;
 public:
-    DataPinIn(DataInterface*interface, int type, DataPin* target);
+    DataPinIn(BaseBlock*interface, int type, DataPin* target);
     ~DataPinIn();
 
     bool Available(){return m_valid;}
     void Ready();
     void UnReady(){m_valid=0;}
+    void FreeData(){m_target->FreeData();}
     int Connect(DataPinOut*target);
     Data* GetData(){return m_target->m_data;}
 protected:
     bool m_valid;
     DataPinOut* m_target;
 };
-
 
 class DataInterface
 {
@@ -86,29 +88,24 @@ public:
     void Ready();
 protected:
     BaseBlock* m_parent;
-    vector<DataPin*> m_pin;
+    //vector<PinType*> m_pin;
     int m_valid;
 };
 
-void DataInterface::Pass()
-{
-    for(vector<DataPin*>::iterator it=m_pin.begin();it<m_pin.end();++it)
-    {
-        static_cast<DataPinIn*>(*it)->Ready();
-    }
-}
-
 class BaseBlock
 {
-    friend class DataInterface;
+    friend class DataPinOut;
+    friend class DataPinIn;
     public:
         BaseBlock();
         virtual ~BaseBlock();
     protected:
-        DataInterface m_in_ports;
-        DataInterface m_out_ports;
-        virtual int Work(DataInterface*In,DataInterface*Out)=0;
+        int m_valid;
+        vector<DataPinIn*> m_in_ports;
+        vector<DataPinOut*> m_out_ports;
+        virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)=0;
         int Wrapper();
+        void Ready();
     private:
 };
 
