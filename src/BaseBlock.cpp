@@ -1,5 +1,32 @@
 #include "BaseBlock.h"
 
+Data::Data(int size, int type)
+:m_refcnt(0)
+,m_type(type)
+,m_size(size)
+{
+    m_ptr=new char[size];
+}
+
+Data::~Data()
+{
+    delete [] (char*)m_ptr;
+}
+
+void Data::Delete()
+{
+    if(m_refcnt>1)
+    {
+        m_refcnt--;
+    }
+    else
+        delete this;
+}
+
+/****************************************************
+ *
+ ****************************************************/
+
 DataPin::DataPin(DataInterface*interface, int type)
 :m_parent(interface)
 ,m_type(type)
@@ -51,6 +78,18 @@ int DataPinIn::Connect(DataPinOut*target)
  *
  ****************************************************/
 
+void DataInterface::FreeData()
+{
+    for(vector<DataPin*>::iterator it=m_pin.begin();it<m_pin.end();++it)
+    {
+        static_cast<DataPinOut*>(*it)->FreeData();
+    }
+}
+
+/****************************************************
+ *
+ ****************************************************/
+
 BaseBlock::BaseBlock()
 {
     //ctor
@@ -71,5 +110,6 @@ int BaseBlock::Wrapper()
     Work(&m_in_ports,&m_out_ports);
 
     //clean up memory by checking ref count
+    m_in_ports.FreeData();
     return 0;
 }
