@@ -59,9 +59,32 @@ inline bool DataPinOut::Exist(DataPinIn*target)
     return find(m_target.begin(),m_target.end(),target)!=m_target.end();
 }
 
+void DataPinOut::SetData(Data* data)
+{
+    m_data=data;
+    for(vector<DataPinIn*>::iterator it=m_target.begin();it<m_target.end();++it)
+    {
+        (*it)->Ready();
+    }
+}
+
+
 /****************************************************
  *
  ****************************************************/
+
+DataPinIn::DataPinIn(DataInterface*interface, int type, DataPin* target)
+:DataPin(interface,type)
+,m_valid(0)
+,m_target(NULL)
+{
+
+}
+
+DataPinIn::~DataPinIn()
+{
+
+}
 
 int DataPinIn::Connect(DataPinOut*target)
 {
@@ -74,9 +97,26 @@ int DataPinIn::Connect(DataPinOut*target)
     return target->m_target.size() - 1;
 }
 
+
+void DataPinIn::Ready()
+{
+    if(!m_valid)
+    {
+        m_valid=1;
+        m_parent->Ready();
+    }
+}
+
 /****************************************************
  *
  ****************************************************/
+
+DataInterface::DataInterface(BaseBlock*block)
+:m_parent(block)
+,m_valid(0)
+{
+
+}
 
 void DataInterface::FreeData()
 {
@@ -86,11 +126,21 @@ void DataInterface::FreeData()
     }
 }
 
+void DataInterface::Ready()
+{
+    if(m_valid<(int)m_pin.size()-1)
+        m_valid++;
+    else
+        m_parent->Wrapper();
+}
+
 /****************************************************
  *
  ****************************************************/
 
 BaseBlock::BaseBlock()
+:m_in_ports(this)
+,m_out_ports(this)
 {
     //ctor
 

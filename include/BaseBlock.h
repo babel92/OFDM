@@ -48,39 +48,59 @@ public:
     ~DataPinOut();
 
     int Connect(DataPinIn*target);
+    void SetData(Data* data);
     Data* GetData(){return m_data;}
     void FreeData(){m_data->Delete();};
 protected:
     bool Exist(DataPinIn*ptr);
     vector<DataPinIn*> m_target;
+
     Data* m_data;
 };
+
 
 class DataPinIn: public DataPin
 {
     friend class DataPinOut;
 public:
-    DataPinIn(DataInterface*interface, int type, DataPin* target):DataPin(interface,type),m_target(NULL){}
+    DataPinIn(DataInterface*interface, int type, DataPin* target);
     ~DataPinIn();
 
+    bool Available(){return m_valid;}
+    void Ready();
+    void UnReady(){m_valid=0;}
     int Connect(DataPinOut*target);
     Data* GetData(){return m_target->m_data;}
 protected:
+    bool m_valid;
     DataPinOut* m_target;
 };
+
 
 class DataInterface
 {
 public:
+    DataInterface(BaseBlock*block);
     void FreeData();
+    void Pass();
+    void Ready();
 protected:
     BaseBlock* m_parent;
     vector<DataPin*> m_pin;
-
+    int m_valid;
 };
+
+void DataInterface::Pass()
+{
+    for(vector<DataPin*>::iterator it=m_pin.begin();it<m_pin.end();++it)
+    {
+        static_cast<DataPinIn*>(*it)->Ready();
+    }
+}
 
 class BaseBlock
 {
+    friend class DataInterface;
     public:
         BaseBlock();
         virtual ~BaseBlock();
