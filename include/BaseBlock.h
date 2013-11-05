@@ -16,6 +16,7 @@ class DataInterface;
 class DataPinOut;
 class DataPinIn;
 
+#define GetPin(pin,index) ((*pin)[index])
 
 class Data
 {
@@ -100,13 +101,17 @@ class BaseBlock
     friend class DataPinOut;
     friend class DataPinIn;
     friend void Connect(BaseBlock&Out,int OutPin,BaseBlock&In,int InPin);
+    friend void Connect(BaseBlock&Out,string OutPin,BaseBlock&In,string InPin);
     public:
         BaseBlock(GateDescription In,GateDescription Out);
         virtual ~BaseBlock();
+        int FindInPort(const string PortName);
+        int FindOutPort(const string PortName);
     protected:
         thread* m_thread;
 
-        mutex m_mutex;
+        mutex m_condmutex;
+        mutex m_datamutex;
         std::unique_lock<std::mutex> m_lock;
         condition_variable m_event;
 

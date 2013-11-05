@@ -31,8 +31,7 @@ int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void
     return paContinue;
 }
 
-int main()
-{/*
+/*
     Plotter *plt[2]={new Plotter(0,SAMPLE_TIME*FRAME_SIZE,-1,1),new Plotter(0,SAMPLE_RATE/2,0,40)};
 
     plt[0]->SetTitle("Waveform");
@@ -49,13 +48,18 @@ int main()
         Pa_Sleep(5000);
     Cleanup_Portaudio();
 */
-    BitGenerator a;
-    Printer b("jiba"),c("lubi");
-    Sleep(1);
-    Connect(a,0,b,0);
-    Connect(a,0,c,0);
+
+int main()
+{
+    BitGenerator gen;
+    Printer print("fuuuuuucccck ");
+    Concatenater c;
+
+    Connect(gen,"out",c,"in1");
+    Connect(gen,"out",c,"in2");
+    Connect(c,"out",print,"in");
 
     while(1)
-    Sleep(100);
+        Sleep(100);
     return 0;
 }

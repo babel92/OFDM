@@ -76,10 +76,6 @@
 		<Unit filename="src/audio.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/safecall.cpp" />
-		<Unit filename="src/safecall_asm.asm">
-			<Option compiler="gcc" use="1" buildCommand="nasm -fwin32 -o $object $file" />
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />

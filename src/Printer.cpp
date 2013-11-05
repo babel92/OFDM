@@ -2,7 +2,7 @@
 #include <iostream>
 
 Printer::Printer(string prefix)
-:BaseBlock({"char input"},{})
+:BaseBlock({"char in"},{})
 ,m_prefix(prefix)
 {
     //ctor

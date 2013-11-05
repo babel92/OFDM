@@ -55,7 +55,7 @@ void Data::Delete()
 
 void Connect(BaseBlock&Out,string OutPin,BaseBlock&In,string InPin)
 {
-
+    Connect(Out,Out.FindOutPort(OutPin),In,In.FindInPort(InPin));
 }
 
 void Connect(BaseBlock&Out,int OutPin,BaseBlock&In,int InPin)
@@ -99,6 +99,7 @@ Data* DataPinOut::AllocData(int Count)
 {
     // we don't need to worry about leak here
     m_data=new Data(this,m_type,Count);
+
     return m_data;
 }
 
@@ -127,7 +128,8 @@ void DataPinOut::Ready()
         DataPinIn*dbg=*it;
         // if one target haven't done, just ignore it
         //if((*it)->m_data_dup!=NULL)
-        if(!(*it)->m_parent->m_mutex.try_lock())
+
+        if(!(*it)->m_parent->m_condmutex.try_lock())
         {
             m_data->Delete();
             continue;
@@ -135,7 +137,7 @@ void DataPinOut::Ready()
 
         // we might need to duplicate the data pointer to prevent race condition
         (*it)->m_data_dup=m_data;
-        (*it)->m_parent->m_mutex.unlock();
+        (*it)->m_parent->m_condmutex.unlock();
         (*it)->Ready();
     }
 }
@@ -178,12 +180,13 @@ int DataPinIn::Connect(DataPinOut*target)
 
 
 void DataPinIn::Ready()
-{
+{/*
     if(!m_valid)
     {
         m_valid=1;
         m_parent->Ready();
-    }
+    }*/
+    m_parent->Ready();
 }
 
 /****************************************************
@@ -203,15 +206,20 @@ void BaseBlock::m_worker()
         for(;;)
         {
             // wait for input notification
+            start:
             m_event.wait(m_lock);
 
             // if any input pin doesn't have data, just wait
+
             for(DataPinIn* ptr:m_in_ports)
-                if(ptr->m_data_dup==NULL)
-                    continue;
+                if(ptr->GetData()==NULL)
+                    goto start;
 
             // do work
             Work(&m_in_ports,&m_out_ports);
+
+            for(DataPinOut* out:m_out_ports)
+                out->Ready();
 
             // this might need a lock, we'll see
             for(DataPinIn* ptr:m_in_ports)
@@ -223,6 +231,22 @@ void BaseBlock::m_worker()
             }
         }
     }
+}
+
+int BaseBlock::FindInPort(const string PortName)
+{
+    for(int i=0;i<m_in_ports.size();++i)
+        if(PortName==m_in_ports[i]->GetName())
+            return i;
+    return -1;
+}
+
+int BaseBlock::FindOutPort(const string PortName)
+{
+    for(int i=0;i<m_out_ports.size();++i)
+        if(PortName==m_out_ports[i]->GetName())
+            return i;
+    return -1;
 }
 
 int TypeLookup(const string& str)
@@ -243,7 +267,7 @@ void GateParser(string gate,int&type,string&name)
 }
 
 BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
-:m_lock(m_mutex)
+:m_lock(m_condmutex)
 ,m_valid(0)
 {
     //ctor
