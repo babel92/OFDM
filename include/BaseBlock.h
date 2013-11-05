@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <vector>
 #include <algorithm>
+#include <thread>
+#include <string>
 
 using namespace std;
 
@@ -31,10 +33,11 @@ public:
 class DataPin
 {
 public:
-    DataPin(BaseBlock*parent, int type);
+    DataPin(BaseBlock*parent, string&name, int type);
     int GetType(){return m_type;}
     virtual ~DataPin();
 protected:
+    string m_name;
     BaseBlock* m_parent;
     int m_type;
     //vector<DataPin*> m_target;
@@ -44,7 +47,7 @@ class DataPinOut: public DataPin
 {
     friend class DataPinIn;
 public:
-    DataPinOut(BaseBlock*interface, int type, DataPin* target):DataPin(interface,type){}
+    DataPinOut(BaseBlock*interface, string&name, int type):DataPin(interface,name,type){}
     ~DataPinOut();
 
     int Connect(DataPinIn*target);
@@ -65,7 +68,7 @@ class DataPinIn: public DataPin
 {
     friend class DataPinOut;
 public:
-    DataPinIn(BaseBlock*interface, int type, DataPin* target);
+    DataPinIn(BaseBlock*interface, string&name, int type);
     ~DataPinIn();
 
     bool Available(){return m_valid;}
@@ -92,20 +95,25 @@ protected:
     int m_valid;
 };
 
+typedef vector<string> GateDescription;
+
 class BaseBlock
 {
     friend class DataPinOut;
     friend class DataPinIn;
     public:
-        BaseBlock();
+        BaseBlock(GateDescription In,GateDescription Out);
         virtual ~BaseBlock();
     protected:
+        thread* m_thread;
+        void m_worker();
         int m_valid;
         vector<DataPinIn*> m_in_ports;
         vector<DataPinOut*> m_out_ports;
         virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)=0;
         int Wrapper();
         void Ready();
+        virtual void SetupPort()=0;
     private:
 };
 

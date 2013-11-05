@@ -1,5 +1,6 @@
 #include "BaseBlock.h"
 
+
 Data::Data(int size, int type)
 :m_refcnt(0)
 ,m_type(type)
@@ -27,8 +28,9 @@ void Data::Delete()
  *
  ****************************************************/
 
-DataPin::DataPin(BaseBlock*interface, int type)
-:m_parent(interface)
+DataPin::DataPin(BaseBlock*interface, string&name, int type)
+:m_name(name)
+,m_parent(interface)
 ,m_type(type)
 {
 
@@ -42,6 +44,11 @@ DataPin::~DataPin()
 /****************************************************
  *
  ****************************************************/
+
+DataPinOut::~DataPinOut()
+{
+
+}
 
 int DataPinOut::Connect(DataPinIn*target)
 {
@@ -78,8 +85,8 @@ void DataPinOut::SetData(Data* data)
  *
  ****************************************************/
 
-DataPinIn::DataPinIn(BaseBlock*interface, int type, DataPin* target)
-:DataPin(interface,type)
+DataPinIn::DataPinIn(BaseBlock*interface, string&name, int type)
+:DataPin(interface,name,type)
 ,m_valid(0)
 ,m_target(NULL)
 {
@@ -143,11 +150,50 @@ void DataInterface::Ready()
  *
  ****************************************************/
 
-BaseBlock::BaseBlock()
+void BaseBlock::m_worker()
+{
+    if(m_in_ports.size()==0)
+    {
+        //should not return
+        Work(NULL,&m_out_ports);
+    }
+    else
+    {
+        for(;;)
+        {
+            //wait for notification
+
+            //do work
+            Work(&m_in_ports,&m_out_ports);
+        }
+    }
+}
+
+void GateParser(string gate,int&type,string&name)
+{
+    int space=gate.find(' ');
+    type=stoi(gate.substr(0,space));
+    name=gate.substr(space+1,gate.length()-space-1);
+}
+
+BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
 :m_valid(0)
 {
     //ctor
+    int type;
+    string name;
+    for(string InPorts:In)
+    {
+        GateParser(InPorts,type,name);
+        m_in_ports.push_back(new DataPinIn(this,name,type));
+    }
+    for(string OutPorts:Out)
+    {
+        GateParser(OutPorts,type,name);
+        m_out_ports.push_back(new DataPinOut(this,name,type));
+    }
 
+    m_thread=new std::thread(&BaseBlock::m_worker,this);
 }
 
 BaseBlock::~BaseBlock()
