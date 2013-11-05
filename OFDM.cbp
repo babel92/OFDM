@@ -7,23 +7,25 @@
 		<Option compiler="gcc" />
 		<Build>
 			<Target title="Debug">
-				<Option output="bin\Debug\OFDM" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Debug\" />
+				<Option output="bin/Debug/OFDM" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-g" />
-					<Add directory="F:\Projects\OFDM\include" />
-					<Add directory="C:\Program Files (x86)\FLTK\include" />
+					<Add directory="F:/Projects/OFDM/include" />
+					<Add directory="C:/Program Files (x86)/FLTK/include" />
+					<Add directory="include" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
-				<Option output="bin\Release\OFDM" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj\Release\" />
+				<Option output="bin/Release/OFDM" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add directory="include" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -35,8 +37,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 			<Add option="-DWIN32" />
-			<Add directory="F:\Projects\OFDM\include" />
-			<Add directory="C:\Program Files (x86)\FLTK\include" />
+			<Add directory="F:/Projects/OFDM/include" />
+			<Add directory="C:/Program Files (x86)/FLTK/include" />
 		</Compiler>
 		<Linker>
 			<Add option="-lfftw3f" />
@@ -47,31 +49,34 @@
 			<Add option="-luuid -lcomctl32" />
 			<Add directory="libs" />
 		</Linker>
-		<Unit filename="include\BaseBlock.h" />
-		<Unit filename="include\Cartesian.H" />
-		<Unit filename="include\JSSynchornize.h" />
-		<Unit filename="include\Plotter.h" />
-		<Unit filename="include\audio.h" />
-		<Unit filename="include\fftw\fftw3.h" />
-		<Unit filename="include\global.h" />
-		<Unit filename="include\portaudio\pa_asio.h" />
-		<Unit filename="include\portaudio\pa_jack.h" />
-		<Unit filename="include\portaudio\pa_linux_alsa.h" />
-		<Unit filename="include\portaudio\pa_mac_core.h" />
-		<Unit filename="include\portaudio\pa_win_ds.h" />
-		<Unit filename="include\portaudio\pa_win_wasapi.h" />
-		<Unit filename="include\portaudio\pa_win_waveformat.h" />
-		<Unit filename="include\portaudio\pa_win_wmme.h" />
-		<Unit filename="include\portaudio\portaudio.h" />
-		<Unit filename="include\safecall.h" />
-		<Unit filename="src\BaseBlock.cpp" />
-		<Unit filename="src\Cartesian.cpp" />
-		<Unit filename="src\Plotter.cpp" />
-		<Unit filename="src\audio.cpp" />
-		<Unit filename="src\main.cpp" />
-		<Unit filename="src\safecall.cpp" />
-		<Unit filename="src\safecall_asm.asm">
+		<Unit filename="include/BaseBlock.h" />
+		<Unit filename="include/BitGenerator.h" />
+		<Unit filename="include/Cartesian.H" />
+		<Unit filename="include/JSSynchornize.h" />
+		<Unit filename="include/Plotter.h" />
+		<Unit filename="include/audio.h" />
+		<Unit filename="include/fftw/fftw3.h" />
+		<Unit filename="include/global.h" />
+		<Unit filename="include/portaudio/pa_asio.h" />
+		<Unit filename="include/portaudio/pa_jack.h" />
+		<Unit filename="include/portaudio/pa_linux_alsa.h" />
+		<Unit filename="include/portaudio/pa_mac_core.h" />
+		<Unit filename="include/portaudio/pa_win_ds.h" />
+		<Unit filename="include/portaudio/pa_win_wasapi.h" />
+		<Unit filename="include/portaudio/pa_win_waveformat.h" />
+		<Unit filename="include/portaudio/pa_win_wmme.h" />
+		<Unit filename="include/portaudio/portaudio.h" />
+		<Unit filename="include/safecall.h" />
+		<Unit filename="src/BaseBlock.cpp" />
+		<Unit filename="src/BitGenerator.cpp" />
+		<Unit filename="src/Cartesian.cpp" />
+		<Unit filename="src/Plotter.cpp" />
+		<Unit filename="src/audio.cpp" />
+		<Unit filename="src/main.cpp" />
+		<Unit filename="src/safecall.cpp" />
+		<Unit filename="src/safecall_asm.asm">
 			<Option compiler="gcc" use="1" buildCommand="nasm -fwin32 -o $object $file" />
+			<Option target="&lt;{~None~}&gt;" />
 		</Unit>
 		<Extensions>
 			<code_completion />

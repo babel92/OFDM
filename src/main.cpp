@@ -3,6 +3,7 @@
 #include <iostream>
 #include "plotter.h"
 #include "safecall.h"
+#include "BitGenerator.h"
 
 using namespace std;
 
@@ -30,7 +31,7 @@ int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void
 }
 
 int main()
-{
+{/*
     Plotter *plt[2]={new Plotter(0,SAMPLE_TIME*FRAME_SIZE,-1,1),new Plotter(0,SAMPLE_RATE/2,0,40)};
 
     plt[0]->SetTitle("Waveform");
@@ -46,6 +47,9 @@ int main()
     while(1);
         Pa_Sleep(5000);
     Cleanup_Portaudio();
+*/
+    BitGenerator a;
 
+    while(1);
     return 0;
 }

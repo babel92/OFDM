@@ -1,5 +1,5 @@
 #include "BaseBlock.h"
-
+#include <algorithm>
 
 Data::Data(int size, int type)
 :m_refcnt(0)
@@ -44,6 +44,12 @@ DataPin::~DataPin()
 /****************************************************
  *
  ****************************************************/
+
+DataPinOut::DataPinOut(BaseBlock*interface, string&name, int type)
+:DataPin(interface,name,type)
+{
+
+}
 
 DataPinOut::~DataPinOut()
 {
@@ -169,10 +175,24 @@ void BaseBlock::m_worker()
     }
 }
 
+int TypeLookup(const string& str)
+{
+    if(str=="int")
+        return 0;
+    else if(str=="float")
+        return 1;
+    else if(str=="double")
+        return 2;
+    else if(str=="byte")
+        return 3;
+    else
+        throw "";
+}
+
 void GateParser(string gate,int&type,string&name)
 {
     int space=gate.find(' ');
-    type=stoi(gate.substr(0,space));
+    type=TypeLookup(gate.substr(0,space));
     name=gate.substr(space+1,gate.length()-space-1);
 }
 

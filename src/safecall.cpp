@@ -1,5 +1,5 @@
 #include "safecall.h"
-
+/*
 void SafeCallAgentCLayer(void*context)
 {
     if(((CallContext*)context)->calltype==0)
@@ -21,7 +21,7 @@ void Invoke(void*proc,int argnum,...)
         context->args[i]=va_arg(args,uint32_t);
     Fl::awake(SafeCallAgentCLayer,context);
 }
-
+*/
 void SafeBindCallAgent(void*proc)
 {
     std::function<void()>* wrapper = reinterpret_cast<std::function<void()>*>(proc);

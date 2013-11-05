@@ -3,7 +3,7 @@
 
 #include <cstdlib>
 #include <vector>
-#include <algorithm>
+
 #include <thread>
 #include <string>
 
@@ -14,7 +14,7 @@ typedef int DataType;
 class DataInterface;
 class DataPinOut;
 class DataPinIn;
-class BaseBlock;
+
 
 class Data
 {
@@ -29,12 +29,14 @@ public:
     void Delete();
 };
 
+class BaseBlock;
 
 class DataPin
 {
 public:
     DataPin(BaseBlock*parent, string&name, int type);
     int GetType(){return m_type;}
+    const string& GetName(){return m_name;}
     virtual ~DataPin();
 protected:
     string m_name;
@@ -47,7 +49,7 @@ class DataPinOut: public DataPin
 {
     friend class DataPinIn;
 public:
-    DataPinOut(BaseBlock*interface, string&name, int type):DataPin(interface,name,type){}
+    DataPinOut(BaseBlock*interfac, std::string&name, int type);
     ~DataPinOut();
 
     int Connect(DataPinIn*target);
@@ -68,7 +70,7 @@ class DataPinIn: public DataPin
 {
     friend class DataPinOut;
 public:
-    DataPinIn(BaseBlock*interface, string&name, int type);
+    DataPinIn(BaseBlock*interfac, string&name, int type);
     ~DataPinIn();
 
     bool Available(){return m_valid;}
@@ -95,7 +97,7 @@ protected:
     int m_valid;
 };
 
-typedef vector<string> GateDescription;
+typedef initializer_list<string> GateDescription;
 
 class BaseBlock
 {
@@ -113,7 +115,6 @@ class BaseBlock
         virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)=0;
         int Wrapper();
         void Ready();
-        virtual void SetupPort()=0;
     private:
 };
 

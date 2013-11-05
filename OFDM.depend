@@ -11,12 +11,13 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1379975102 source:f:\projects\ofdm\src\main.cpp
+1383624280 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
 	"plotter.h"
 	"safecall.h"
+	"BitGenerator.h"
 
 1379391258 source:f:\projects\ofdm\src\audio.cpp
 	"audio.h"
@@ -330,17 +331,25 @@
 	"global.h"
 	<functional>
 
-1379393079 source:f:\projects\ofdm\src\safecall.cpp
+1383623203 source:f:\projects\ofdm\src\safecall.cpp
 	"safecall.h"
 
 1379375033 source:f:\projects\ofdm\src\safecall_asm.asm
 
-1383612331 source:f:\projects\ofdm\src\baseblock.cpp
+1383624591 source:f:\projects\ofdm\src\baseblock.cpp
 	"BaseBlock.h"
+	<algorithm>
 
-1383613630 f:\projects\ofdm\include\baseblock.h
+1383624591 f:\projects\ofdm\include\baseblock.h
 	<cstdlib>
 	<vector>
-	<algorithm>
 	<thread>
+	<string>
+
+1383624621 source:f:\projects\ofdm\src\bitgenerator.cpp
+	"BitGenerator.h"
+	<iostream>
+
+1383624591 f:\projects\ofdm\include\bitgenerator.h
+	<BaseBlock.h>
 
