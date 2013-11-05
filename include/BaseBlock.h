@@ -3,7 +3,8 @@
 
 #include <cstdlib>
 #include <vector>
-
+#include <condition_variable>
+#include <mutex>
 #include <thread>
 #include <string>
 
@@ -18,14 +19,18 @@ class DataPinIn;
 
 class Data
 {
+    friend class DataPinOut;
 private:
     void*m_ptr;
+    DataPinOut*m_parent;
     int m_refcnt;
     int m_type;
     int m_size;
+    int TypeSizeLookup();
 public:
-    Data(int size,int type);
+    Data(DataPinOut*parent,int type,int size=0);
     ~Data();
+    unsigned char* Get(){return (unsigned char*)m_ptr;}
     void Delete();
 };
 
@@ -53,9 +58,11 @@ public:
     ~DataPinOut();
 
     int Connect(DataPinIn*target);
-    void SetData(Data* data);
+    //void SetData(Data* data);
     void Ready();
     Data* GetData(){return m_data;}
+
+    Data* AllocData(int Count);
     void FreeData(){m_data->Delete();};
 protected:
     bool Exist(DataPinIn*ptr);
@@ -69,6 +76,7 @@ protected:
 class DataPinIn: public DataPin
 {
     friend class DataPinOut;
+    friend class BaseBlock;
 public:
     DataPinIn(BaseBlock*interfac, string&name, int type);
     ~DataPinIn();
@@ -76,25 +84,13 @@ public:
     bool Available(){return m_valid;}
     void Ready();
     void UnReady(){m_valid=0;}
-    void FreeData(){m_target->FreeData();}
+    void FreeData(){m_data_dup->Delete();}
     int Connect(DataPinOut*target);
-    Data* GetData(){return m_target->m_data;}
+    Data* GetData(){return m_data_dup;}
 protected:
     bool m_valid;
+    Data* m_data_dup;
     DataPinOut* m_target;
-};
-
-class DataInterface
-{
-public:
-    DataInterface(BaseBlock*block);
-    void FreeData();
-    void Pass();
-    void Ready();
-protected:
-    BaseBlock* m_parent;
-    //vector<PinType*> m_pin;
-    int m_valid;
 };
 
 typedef initializer_list<string> GateDescription;
@@ -103,11 +99,17 @@ class BaseBlock
 {
     friend class DataPinOut;
     friend class DataPinIn;
+    friend void Connect(BaseBlock&Out,int OutPin,BaseBlock&In,int InPin);
     public:
         BaseBlock(GateDescription In,GateDescription Out);
         virtual ~BaseBlock();
     protected:
         thread* m_thread;
+
+        mutex m_mutex;
+        std::unique_lock<std::mutex> m_lock;
+        condition_variable m_event;
+
         void m_worker();
         int m_valid;
         vector<DataPinIn*> m_in_ports;

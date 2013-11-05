@@ -1,12 +1,37 @@
 #include "BaseBlock.h"
 #include <algorithm>
+#include <iostream>
 
-Data::Data(int size, int type)
-:m_refcnt(0)
+struct TypeEntry
+{
+    string TypeName;
+    int Size;
+}TypeList[]=
+{
+    {"int",4},
+    {"float",4},
+    {"double",4},
+    {"byte",1},
+    {"short",2},
+    {"char",1}
+};
+
+int TypeListSize=sizeof(TypeList)/sizeof(TypeEntry);
+
+inline int Data::TypeSizeLookup()
+{
+    return TypeList[m_type].Size;
+}
+
+Data::Data(DataPinOut*parent, int type, int size)
+:m_ptr(NULL)
+,m_parent(parent)
+,m_refcnt(0)
 ,m_type(type)
 ,m_size(size)
 {
-    m_ptr=new char[size];
+    if(size>0)
+        m_ptr=new char[TypeSizeLookup()*size];
 }
 
 Data::~Data()
@@ -22,6 +47,20 @@ void Data::Delete()
     }
     else
         delete this;
+}
+
+/****************************************************
+ *
+ ****************************************************/
+
+void Connect(BaseBlock&Out,string OutPin,BaseBlock&In,string InPin)
+{
+
+}
+
+void Connect(BaseBlock&Out,int OutPin,BaseBlock&In,int InPin)
+{
+     Out.m_out_ports[OutPin]->Connect(In.m_in_ports[InPin]);
 }
 
 /****************************************************
@@ -56,6 +95,13 @@ DataPinOut::~DataPinOut()
 
 }
 
+Data* DataPinOut::AllocData(int Count)
+{
+    // we don't need to worry about leak here
+    m_data=new Data(this,m_type,Count);
+    return m_data;
+}
+
 int DataPinOut::Connect(DataPinIn*target)
 {
     if(Exist(target)||target->m_target==this)
@@ -74,18 +120,32 @@ inline bool DataPinOut::Exist(DataPinIn*target)
 
 void DataPinOut::Ready()
 {
+    m_data->m_refcnt=m_target.size();
+
     for(vector<DataPinIn*>::iterator it=m_target.begin();it<m_target.end();++it)
     {
+        DataPinIn*dbg=*it;
+        // if one target haven't done, just ignore it
+        //if((*it)->m_data_dup!=NULL)
+        if(!(*it)->m_parent->m_mutex.try_lock())
+        {
+            m_data->Delete();
+            continue;
+        }
+
+        // we might need to duplicate the data pointer to prevent race condition
+        (*it)->m_data_dup=m_data;
+        (*it)->m_parent->m_mutex.unlock();
         (*it)->Ready();
     }
 }
-
+/*
 void DataPinOut::SetData(Data* data)
 {
     m_data=data;
     Ready();
 }
-
+*/
 
 /****************************************************
  *
@@ -94,6 +154,7 @@ void DataPinOut::SetData(Data* data)
 DataPinIn::DataPinIn(BaseBlock*interface, string&name, int type)
 :DataPin(interface,name,type)
 ,m_valid(0)
+,m_data_dup(NULL)
 ,m_target(NULL)
 {
 
@@ -128,33 +189,6 @@ void DataPinIn::Ready()
 /****************************************************
  *
  ****************************************************/
-/*
-DataInterface::DataInterface(BaseBlock*block)
-:m_parent(block)
-,m_valid(0)
-{
-
-}
-
-void DataInterface::FreeData()
-{
-    for(vector<PinType*>::iterator it=m_pin.begin();it<m_pin.end();++it)
-    {
-        (*it)->FreeData();
-    }
-}
-
-void DataInterface::Ready()
-{
-    if(m_valid<(int)m_pin.size()-1)
-        m_valid++;
-    else
-        m_parent->Wrapper();
-}
-*/
-/****************************************************
- *
- ****************************************************/
 
 void BaseBlock::m_worker()
 {
@@ -165,28 +199,40 @@ void BaseBlock::m_worker()
     }
     else
     {
+
         for(;;)
         {
-            //wait for notification
+            // wait for input notification
+            m_event.wait(m_lock);
 
-            //do work
+            // if any input pin doesn't have data, just wait
+            for(DataPinIn* ptr:m_in_ports)
+                if(ptr->m_data_dup==NULL)
+                    continue;
+
+            // do work
             Work(&m_in_ports,&m_out_ports);
+
+            // this might need a lock, we'll see
+            for(DataPinIn* ptr:m_in_ports)
+            {
+                // reduce the data refcnt before we lose it
+                ptr->FreeData();
+                ptr->UnReady();
+                ptr->m_data_dup=NULL;
+            }
         }
     }
 }
 
 int TypeLookup(const string& str)
 {
-    if(str=="int")
-        return 0;
-    else if(str=="float")
-        return 1;
-    else if(str=="double")
-        return 2;
-    else if(str=="byte")
-        return 3;
-    else
-        throw "";
+    for(int i=0;i<TypeListSize;++i)
+    {
+        if(TypeList[i].TypeName==str)
+            return i;
+    }
+    return -1;
 }
 
 void GateParser(string gate,int&type,string&name)
@@ -197,7 +243,8 @@ void GateParser(string gate,int&type,string&name)
 }
 
 BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
-:m_valid(0)
+:m_lock(m_mutex)
+,m_valid(0)
 {
     //ctor
     int type;
@@ -237,11 +284,13 @@ int BaseBlock::Wrapper()
 
 void BaseBlock::Ready()
 {
+    /*
     if(m_valid<(int)m_in_ports.size()-1)
         m_valid++;
     else
     {
         m_valid=0;
         Wrapper();
-    }
+    }*/
+    m_event.notify_all();
 }

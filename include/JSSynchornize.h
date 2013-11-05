@@ -1,7 +1,10 @@
 #ifndef JSSYNCHORNIZE_H_INCLUDED
 #define JSSYNCHORNIZE_H_INCLUDED
 
+#ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0700
+#endif // _WIN32_WINNT
+
 #include <windows.h>
 
 class JSEvent

@@ -54,6 +54,7 @@
 		<Unit filename="include/Cartesian.H" />
 		<Unit filename="include/JSSynchornize.h" />
 		<Unit filename="include/Plotter.h" />
+		<Unit filename="include/Printer.h" />
 		<Unit filename="include/audio.h" />
 		<Unit filename="include/fftw/fftw3.h" />
 		<Unit filename="include/global.h" />
@@ -71,6 +72,7 @@
 		<Unit filename="src/BitGenerator.cpp" />
 		<Unit filename="src/Cartesian.cpp" />
 		<Unit filename="src/Plotter.cpp" />
+		<Unit filename="src/Printer.cpp" />
 		<Unit filename="src/audio.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/safecall.cpp" />

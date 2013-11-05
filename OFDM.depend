@@ -11,13 +11,14 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1383624280 source:f:\projects\ofdm\src\main.cpp
+1383640439 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
 	"plotter.h"
 	"safecall.h"
 	"BitGenerator.h"
+	"Printer.h"
 
 1379391258 source:f:\projects\ofdm\src\audio.cpp
 	"audio.h"
@@ -187,7 +188,7 @@
 	<stdio.h>
 	<stddef.h>
 
-1379375033 f:\projects\ofdm\include\jssynchornize.h
+1383626571 f:\projects\ofdm\include\jssynchornize.h
 	<windows.h>
 
 1379375032 f:\projects\ofdm\include\cartesian.h
@@ -336,20 +337,31 @@
 
 1379375033 source:f:\projects\ofdm\src\safecall_asm.asm
 
-1383624591 source:f:\projects\ofdm\src\baseblock.cpp
+1383640022 source:f:\projects\ofdm\src\baseblock.cpp
 	"BaseBlock.h"
 	<algorithm>
+	<iostream>
 
-1383624591 f:\projects\ofdm\include\baseblock.h
+1383639521 f:\projects\ofdm\include\baseblock.h
 	<cstdlib>
 	<vector>
+	<condition_variable>
+	<mutex>
 	<thread>
 	<string>
 
-1383624621 source:f:\projects\ofdm\src\bitgenerator.cpp
+1383640389 source:f:\projects\ofdm\src\bitgenerator.cpp
 	"BitGenerator.h"
-	<iostream>
+	<cstring>
+	<Windows.h>
 
 1383624591 f:\projects\ofdm\include\bitgenerator.h
+	<BaseBlock.h>
+
+1383640298 source:f:\projects\ofdm\src\printer.cpp
+	"Printer.h"
+	<iostream>
+
+1383640186 f:\projects\ofdm\include\printer.h
 	<BaseBlock.h>
 
