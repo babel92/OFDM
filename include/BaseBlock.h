@@ -107,6 +107,8 @@ class BaseBlock
         virtual ~BaseBlock();
         int FindInPort(const string PortName);
         int FindOutPort(const string PortName);
+        void Ready();
+        void Send();
     protected:
         thread* m_thread;
 
@@ -121,7 +123,7 @@ class BaseBlock
         vector<DataPinOut*> m_out_ports;
         virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)=0;
         int Wrapper();
-        void Ready();
+
     private:
 };
 

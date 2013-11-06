@@ -5,7 +5,7 @@
 #include "safecall.h"
 #include "BitGenerator.h"
 #include "Printer.h"
-
+#include "StringGenerator.h"
 using namespace std;
 
 int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void*userdata)
@@ -51,13 +51,10 @@ int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void
 
 int main()
 {
-    BitGenerator gen;
-    Printer print("fuuuuuucccck ");
-    Concatenater c;
+    StringGenerator gen;
+    Printer print("");
 
-    Connect(gen,"out",c,"in1");
-    Connect(gen,"out",c,"in2");
-    Connect(c,"out",print,"in");
+    Connect(gen,"out",print,"in");
 
     while(1)
         Sleep(100);

@@ -55,6 +55,7 @@
 		<Unit filename="include/JSSynchornize.h" />
 		<Unit filename="include/Plotter.h" />
 		<Unit filename="include/Printer.h" />
+		<Unit filename="include/StringGenerator.h" />
 		<Unit filename="include/audio.h" />
 		<Unit filename="include/fftw/fftw3.h" />
 		<Unit filename="include/global.h" />

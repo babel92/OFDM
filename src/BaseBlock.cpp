@@ -128,13 +128,15 @@ void DataPinOut::Ready()
         DataPinIn*dbg=*it;
         // if one target haven't done, just ignore it
         //if((*it)->m_data_dup!=NULL)
-
+/*
         if(!(*it)->m_parent->m_condmutex.try_lock())
         {
             m_data->Delete();
             continue;
         }
-
+*/
+        // to make sure no packet is missed
+        (*it)->m_parent->m_condmutex.lock();
         // we might need to duplicate the data pointer to prevent race condition
         (*it)->m_data_dup=m_data;
         (*it)->m_parent->m_condmutex.unlock();
@@ -290,6 +292,12 @@ BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
 BaseBlock::~BaseBlock()
 {
     //dtor
+}
+
+void BaseBlock::Send()
+{
+    for(DataPinOut* out:m_out_ports)
+        out->Ready();
 }
 
 int BaseBlock::Wrapper()
