@@ -10,9 +10,9 @@ class Printer : public BaseBlock
         Printer():BaseBlock({"char in"},{}) {Ready();}
         virtual ~Printer() {}
     protected:
-        virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)
+        virtual int Work(INPINS In,OUTPINS Out)
         {
-            Data*input=GetPin(In,0)->GetData();
+            Data*input=In[0]->GetData();
             puts((char*)input->Get());
             return 0;
         }

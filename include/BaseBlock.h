@@ -16,7 +16,7 @@ class DataInterface;
 class DataPinOut;
 class DataPinIn;
 
-#define GetPin(pin,index) ((*pin)[index])
+#define GetPin(pin,index) (pin[index])
 
 class Data
 {
@@ -96,6 +96,9 @@ protected:
 };
 
 typedef initializer_list<string> GateDescription;
+typedef vector<DataPinIn*>& INPINS;
+typedef vector<DataPinOut*>& OUTPINS;
+
 
 class BaseBlock
 {
@@ -124,7 +127,7 @@ class BaseBlock
         int m_valid;
         vector<DataPinIn*> m_in_ports;
         vector<DataPinOut*> m_out_ports;
-        virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)=0;
+        virtual int Work(vector<DataPinIn*>&In,vector<DataPinOut*>&Out)=0;
         int Wrapper();
         void Send();
         void Ready();

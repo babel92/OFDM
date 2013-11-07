@@ -211,7 +211,7 @@ void BaseBlock::m_worker()
     {
         m_start_evnt.wait(m_src_lock);
         //should not return
-        Work(NULL,&m_out_ports);
+        Work(*((vector<DataPinIn*>*)NULL),m_out_ports);
     }
     else
     {
@@ -229,7 +229,7 @@ void BaseBlock::m_worker()
                     goto start;
 
             // do work
-            Work(&m_in_ports,&m_out_ports);
+            Work(m_in_ports,m_out_ports);
 
             for(DataPinOut* out:m_out_ports)
                 out->Ready();
@@ -303,6 +303,7 @@ BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
 BaseBlock::~BaseBlock()
 {
     //dtor
+    exit(0);
 }
 
 void BaseBlock::Send()
@@ -316,7 +317,7 @@ int BaseBlock::Wrapper()
 
     //test the return value
     //mem allocation for out ports should be done in Work()
-    Work(&m_in_ports,&m_out_ports);
+    Work(m_in_ports,m_out_ports);
 
 
     //clean up memory by checking ref count

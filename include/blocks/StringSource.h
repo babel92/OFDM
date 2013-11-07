@@ -15,12 +15,12 @@ public:
     virtual ~StringSource() {}
 protected:
 
-    virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)
+    virtual int Work(INPINS In,OUTPINS Out)
     {
         int i=0;
         for(;;)
         {
-            DataPinOut*out=GetPin(Out,0);
+            DataPinOut*out=Out[0];
             sprintf((char*)out->AllocData(100)->Get(),"%d\tShit",i++);
             Send();
         }

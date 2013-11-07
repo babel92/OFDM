@@ -16,9 +16,9 @@ class AudioSource : public BaseBlock
         }
         virtual ~AudioSource() {}
     protected:
-        virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)
+        virtual int Work(INPINS In,OUTPINS Out)
         {
-            DataPinOut*outpin=GetPin(Out,0);
+            DataPinOut*outpin=Out[0];
             for(;;)
             {
                 Data*ptr=outpin->AllocData(FRAME_SIZE);

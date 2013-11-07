@@ -20,10 +20,10 @@ class FourierTransform : public BaseBlock
         fftwf_complex* m_buffer;
         fftwf_plan m_plan;
 
-        virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)
+        virtual int Work(INPINS In,OUTPINS Out)
         {
-            Data*in=GetPin(In,0)->GetData();
-            Data*out=GetPin(Out,0)->AllocData(in->Size());
+            Data*in=In[0]->GetData();
+            Data*out=Out[0]->AllocData(in->Size());
             //memcpy(out->Get(),in->Get(),indata->Size()*2);
 
             m_plan=fftwf_plan_dft_r2c_1d(m_size,(float*)in->Get(),m_buffer,FFTW_ESTIMATE);

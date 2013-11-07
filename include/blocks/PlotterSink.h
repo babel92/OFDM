@@ -11,17 +11,15 @@ class PlotterSink : public BaseBlock
         :BaseBlock({"float in"},{})
         ,m_plotter(xmin,xmax,ymin,ymax)
         {
-            // This really sucks, I need to make the plotter safer with condition variable
-            //Sleep(10);
             m_plotter.SetTitle("LOL");
             Ready();
         }
         virtual ~PlotterSink() {}
     protected:
         Plotter m_plotter;
-        virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)
+        virtual int Work(INPINS In,OUTPINS Out)
         {
-            Data*in=GetPin(In,0)->GetData();
+            Data*in=In[0]->GetData();
             m_plotter.Plot((float*)in->Get(),in->Size());
             return 0;
         }
