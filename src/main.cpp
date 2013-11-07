@@ -63,7 +63,6 @@ int main()
     Connect(src,"out",fft,"in");
     Connect(fft,"out",spectra,"in");
 
-    while(1)
-        Sleep(100);
+    BaseBlock::Run();
     return 0;
 }

@@ -1,6 +1,8 @@
 #include "BaseBlock.h"
 #include <algorithm>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 struct TypeEntry
 {
@@ -15,6 +17,7 @@ struct TypeEntry
     {"short",2},
     {"char",1}
 };
+
 
 int TypeListSize=sizeof(TypeList)/sizeof(TypeEntry);
 
@@ -67,9 +70,9 @@ void Connect(BaseBlock&Out,int OutPin,BaseBlock&In,int InPin)
  *
  ****************************************************/
 
-DataPin::DataPin(BaseBlock*interface, string&name, int type)
+DataPin::DataPin(BaseBlock*parent, string&name, int type)
 :m_name(name)
-,m_parent(interface)
+,m_parent(parent)
 ,m_type(type)
 {
 
@@ -84,8 +87,8 @@ DataPin::~DataPin()
  *
  ****************************************************/
 
-DataPinOut::DataPinOut(BaseBlock*interface, string&name, int type)
-:DataPin(interface,name,type)
+DataPinOut::DataPinOut(BaseBlock*parent, string&name, int type)
+:DataPin(parent,name,type)
 {
 
 }
@@ -155,8 +158,8 @@ void DataPinOut::SetData(Data* data)
  *
  ****************************************************/
 
-DataPinIn::DataPinIn(BaseBlock*interface, string&name, int type)
-:DataPin(interface,name,type)
+DataPinIn::DataPinIn(BaseBlock*parent, string&name, int type)
+:DataPin(parent,name,type)
 ,m_valid(0)
 ,m_data_dup(NULL)
 ,m_target(NULL)
@@ -195,12 +198,18 @@ void DataPinIn::Ready()
  *
  ****************************************************/
 
+
+mutex BaseBlock::m_src_mutex;
+unique_lock<mutex> BaseBlock::m_src_lock=unique_lock<mutex>(m_src_mutex);
+condition_variable BaseBlock::m_start_evnt;
+
 void BaseBlock::m_worker()
 {
     // wait for derived ctor
     m_event.wait(m_lock);
     if(m_in_ports.size()==0)
     {
+        m_start_evnt.wait(m_src_lock);
         //should not return
         Work(NULL,&m_out_ports);
     }
@@ -327,4 +336,13 @@ void BaseBlock::Ready()
         Wrapper();
     }*/
     m_event.notify_all();
+}
+
+void BaseBlock::Run()
+{
+    std::chrono::milliseconds dura( 2000 );
+
+    m_start_evnt.notify_all();
+    while(1)
+        std::this_thread::sleep_for( dura );;
 }

@@ -106,10 +106,8 @@ class BaseBlock
     public:
         BaseBlock(GateDescription In,GateDescription Out);
         virtual ~BaseBlock();
-        int FindInPort(const string PortName);
-        int FindOutPort(const string PortName);
-        void Ready();
-        void Send();
+
+        static void Run();
     protected:
         thread* m_thread;
 
@@ -118,13 +116,20 @@ class BaseBlock
         std::unique_lock<std::mutex> m_lock;
         condition_variable m_event;
 
+        static mutex m_src_mutex;
+        static unique_lock<mutex> m_src_lock;
+        static condition_variable m_start_evnt;
+
         void m_worker();
         int m_valid;
         vector<DataPinIn*> m_in_ports;
         vector<DataPinOut*> m_out_ports;
         virtual int Work(vector<DataPinIn*>*In,vector<DataPinOut*>*Out)=0;
         int Wrapper();
-
+        void Send();
+        void Ready();
+        int FindInPort(const string PortName);
+        int FindOutPort(const string PortName);
     private:
 };
 
