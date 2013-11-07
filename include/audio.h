@@ -10,6 +10,8 @@ void Init_Portaudio();
 
 void Init_Portaudio_Record(DataCallback,void*userdata);
 
+void Audio_Read(void*Output);
+
 void Cleanup_Portaudio();
 
 void Portaudio_StartRecording();

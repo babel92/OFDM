@@ -11,17 +11,19 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1383696487 source:f:\projects\ofdm\src\main.cpp
+1383789563 source:f:\projects\ofdm\src\main.cpp
 	"global.h"
 	"audio.h"
 	<iostream>
 	"plotter.h"
 	"safecall.h"
-	"BitGenerator.h"
-	"Printer.h"
-	"StringGenerator.h"
+	"blocks/StringSource.h"
+	"blocks/Printer.h"
+	"blocks/AudioSource.h"
+	"blocks/PlotterSink.h"
+	"blocks/FourierTransform.h"
 
-1379391258 source:f:\projects\ofdm\src\audio.cpp
+1383775509 source:f:\projects\ofdm\src\audio.cpp
 	"audio.h"
 	"global.h"
 	"portaudio/portaudio.h"
@@ -38,7 +40,7 @@
 
 1379048600 f:\projects\ofdm\include\portaudio\portaudio.h
 
-1379375033 f:\projects\ofdm\include\audio.h
+1383775509 f:\projects\ofdm\include\audio.h
 	"global.h"
 	"portaudio/portaudio.h"
 
@@ -168,13 +170,13 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1379445715 source:f:\projects\ofdm\src\plotter.cpp
+1383788519 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
 	<windows.h>
 	<process.h>
 	"safecall.h"
 
-1379445715 f:\projects\ofdm\include\plotter.h
+1383785867 f:\projects\ofdm\include\plotter.h
 	<queue>
 	"global.h"
 	"fftw/fftw3.h"
@@ -338,12 +340,12 @@
 
 1379375033 source:f:\projects\ofdm\src\safecall_asm.asm
 
-1383685926 source:f:\projects\ofdm\src\baseblock.cpp
+1383787947 source:f:\projects\ofdm\src\baseblock.cpp
 	"BaseBlock.h"
 	<algorithm>
 	<iostream>
 
-1383685926 f:\projects\ofdm\include\baseblock.h
+1383787947 f:\projects\ofdm\include\baseblock.h
 	<cstdlib>
 	<vector>
 	<condition_variable>
@@ -371,4 +373,26 @@
 1383696722 f:\projects\ofdm\include\stringgenerator.h
 	<BaseBlock.h>
 	<cstring>
+
+1383789081 f:\projects\ofdm\include\blocks\stringsource.h
+	<BaseBlock.h>
+	<string>
+	<cstring>
+
+1383788014 f:\projects\ofdm\include\blocks\printer.h
+	<BaseBlock.h>
+	<cstdio>
+
+1383789513 f:\projects\ofdm\include\blocks\audiosource.h
+	<BaseBlock.h>
+	"audio.h"
+
+1383789586 f:\projects\ofdm\include\blocks\plottersink.h
+	"BaseBlock.h"
+	"Plotter.h"
+
+1383789513 f:\projects\ofdm\include\blocks\fouriertransform.h
+	<BaseBlock.h>
+	"fftw/fftw3.h"
+	<math.h>
 

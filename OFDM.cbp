@@ -16,6 +16,7 @@
 					<Add directory="F:/Projects/OFDM/include" />
 					<Add directory="C:/Program Files (x86)/FLTK/include" />
 					<Add directory="include" />
+					<Add directory="include/blocks" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -26,6 +27,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="include" />
+					<Add directory="include/blocks" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -50,13 +52,15 @@
 			<Add directory="libs" />
 		</Linker>
 		<Unit filename="include/BaseBlock.h" />
-		<Unit filename="include/BitGenerator.h" />
 		<Unit filename="include/Cartesian.H" />
 		<Unit filename="include/JSSynchornize.h" />
 		<Unit filename="include/Plotter.h" />
-		<Unit filename="include/Printer.h" />
-		<Unit filename="include/StringGenerator.h" />
 		<Unit filename="include/audio.h" />
+		<Unit filename="include/blocks/AudioSource.h" />
+		<Unit filename="include/blocks/FourierTransform.h" />
+		<Unit filename="include/blocks/PlotterSink.h" />
+		<Unit filename="include/blocks/Printer.h" />
+		<Unit filename="include/blocks/StringSource.h" />
 		<Unit filename="include/fftw/fftw3.h" />
 		<Unit filename="include/global.h" />
 		<Unit filename="include/portaudio/pa_asio.h" />
@@ -70,10 +74,8 @@
 		<Unit filename="include/portaudio/portaudio.h" />
 		<Unit filename="include/safecall.h" />
 		<Unit filename="src/BaseBlock.cpp" />
-		<Unit filename="src/BitGenerator.cpp" />
 		<Unit filename="src/Cartesian.cpp" />
 		<Unit filename="src/Plotter.cpp" />
-		<Unit filename="src/Printer.cpp" />
 		<Unit filename="src/audio.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/safecall.cpp" />

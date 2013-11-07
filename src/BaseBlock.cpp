@@ -197,6 +197,8 @@ void DataPinIn::Ready()
 
 void BaseBlock::m_worker()
 {
+    // wait for derived ctor
+    m_event.wait(m_lock);
     if(m_in_ports.size()==0)
     {
         //should not return

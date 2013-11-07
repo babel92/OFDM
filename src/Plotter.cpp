@@ -109,8 +109,16 @@ Plotter::Plotter(double xmin,double xmax,double ymin,double ymax)
 }
 
 void Plotter::Plot(Real*buf,int size)
-{
-    GUARD(Plotter::Plot,this,buf,size);
+{/*
+    // Duplicate memory to ensure safety, we might use Ca_LinePoint
+    if(InvokeRequired())
+    {
+        Real*newbuf=new Real[size];
+        memcpy(newbuf,buf,size*sizeof(Real));
+        Invoke(WRAPCALL(&Plotter::Plot,this,newbuf,size));
+        return;
+    }*/
+    Fl::lock();
 
     Ca_LinePoint* lp=NULL;
     Ca_Canvas::current(m_canvas);
@@ -119,6 +127,8 @@ void Plotter::Plot(Real*buf,int size)
     for(int i=0;i<size;++i)
         lp=new Ca_LinePoint(lp,i,buf[i],0,FL_BLUE);
     m_canvas->redraw();
+    //delete[] buf;
+    Fl::unlock();
 }
 
 void Plotter::Plot2D(Real*data1,Real*data2,int size)

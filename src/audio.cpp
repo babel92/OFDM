@@ -54,18 +54,17 @@ void Init_Portaudio_Record(DataCallback cutecallback,void*userdata)
                                 0,          /* stereo output */
                                 paFloat32,
                                 44100,
-                                FRAME_SIZE,        /* frames per buffer, i.e. the number
-                                                   of sample frames that PortAudio will
-                                                   request from the callback. Many apps
-                                                   may want to use
-                                                   paFramesPerBufferUnspecified, which
-                                                   tells PortAudio to pick the best,
-                                                   possibly changing, buffer size.*/
-                                Pa_RecordStream, /* this is your callback function */
-                                userdata); /*This is a pointer that will be passed to
+                                FRAME_SIZE,
+                                cutecallback?Pa_RecordStream:NULL,
+                                cutecallback?userdata:NULL); /*This is a pointer that will be passed to
                                                    your callback*/
     LastTime=Pa_GetStreamTime(RecordStream);
     Pa_StartStream(RecordStream);
+}
+
+void Audio_Read(void*Output)
+{
+    Pa_ReadStream(RecordStream,Output,FRAME_SIZE);
 }
 
 void Cleanup_Portaudio()

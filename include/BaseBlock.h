@@ -30,6 +30,7 @@ private:
     int TypeSizeLookup();
 public:
     Data(DataPinOut*parent,int type,int size=0);
+    int& Size(){return m_size;}
     ~Data();
     unsigned char* Get(){return (unsigned char*)m_ptr;}
     void Delete();

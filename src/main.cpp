@@ -3,9 +3,12 @@
 #include <iostream>
 #include "plotter.h"
 #include "safecall.h"
-#include "BitGenerator.h"
-#include "Printer.h"
-#include "StringGenerator.h"
+#include "blocks/StringSource.h"
+#include "blocks/Printer.h"
+#include "blocks/AudioSource.h"
+#include "blocks/PlotterSink.h"
+#include "blocks/FourierTransform.h"
+
 using namespace std;
 
 int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void*userdata)
@@ -51,10 +54,14 @@ int RecCallback(const void*input,void*output,int framecount,PaTime timespan,void
 
 int main()
 {
-    StringGenerator gen;
-    Printer print("");
+    AudioSource src;
+    FourierTransform fft;
+    PlotterSink waveform(0,FRAME_SIZE,-1,1);
+    PlotterSink spectra(0,FRAME_SIZE/2,0,40);
 
-    Connect(gen,"out",print,"in");
+    Connect(src,"out",waveform,"in");
+    Connect(src,"out",fft,"in");
+    Connect(fft,"out",spectra,"in");
 
     while(1)
         Sleep(100);
