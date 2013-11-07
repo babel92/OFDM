@@ -165,13 +165,12 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1383788519 source:f:\projects\ofdm\src\plotter.cpp
+1383864348 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
-	<windows.h>
 	<process.h>
 	"safecall.h"
 
-1383785867 f:\projects\ofdm\include\plotter.h
+1383864061 f:\projects\ofdm\include\plotter.h
 	<queue>
 	"global.h"
 	"fftw/fftw3.h"
@@ -180,7 +179,9 @@
 	<FL/Fl_Button.H>
 	<FL/fl_draw.H>
 	"cartesian.h"
-	"jssynchornize.h"
+	<thread>
+	<mutex>
+	<condition_variable>
 
 1379048600 f:\projects\ofdm\include\fftw\fftw3.h
 	<stdio.h>
@@ -335,7 +336,7 @@
 
 1379375033 source:f:\projects\ofdm\src\safecall_asm.asm
 
-1383793850 source:f:\projects\ofdm\src\baseblock.cpp
+1383863699 source:f:\projects\ofdm\src\baseblock.cpp
 	"BaseBlock.h"
 	<algorithm>
 	<iostream>
@@ -384,7 +385,7 @@
 	<BaseBlock.h>
 	"audio.h"
 
-1383804814 f:\projects\ofdm\include\blocks\plottersink.h
+1383864372 f:\projects\ofdm\include\blocks\plottersink.h
 	"BaseBlock.h"
 	"Plotter.h"
 

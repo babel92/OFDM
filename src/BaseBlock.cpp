@@ -341,8 +341,8 @@ void BaseBlock::Ready()
 void BaseBlock::Run()
 {
     std::chrono::milliseconds dura( 2000 );
-
     m_start_evnt.notify_all();
+
     while(1)
         std::this_thread::sleep_for( dura );;
 }

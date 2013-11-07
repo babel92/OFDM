@@ -12,7 +12,7 @@ class PlotterSink : public BaseBlock
         ,m_plotter(xmin,xmax,ymin,ymax)
         {
             // This really sucks, I need to make the plotter safer with condition variable
-            Sleep(10);
+            //Sleep(10);
             m_plotter.SetTitle("LOL");
             Ready();
         }

@@ -9,8 +9,9 @@
 #include <FL/Fl_Button.H>
 #include <FL/fl_draw.H>
 #include "cartesian.h"
-
-#include "jssynchornize.h"
+#include <thread>
+#include <mutex>
+#include <condition_variable>
 
 using std::queue;
 
@@ -68,7 +69,9 @@ class Plotter
         virtual ~Plotter();
     protected:
     private:
-        JSEvent m_alerter;
+        std::mutex m_mu;
+        std::unique_lock<std::mutex> m_lock;
+        std::condition_variable m_cond;
         static int m_instance;
         static HANDLE m_thread;
         static DWORD m_tid;

@@ -1,5 +1,4 @@
 #include "Plotter.h"
-#include <windows.h>
 #include <process.h>
 #include "safecall.h"
 
@@ -20,8 +19,6 @@ void PlotterThread(void*plotter)
     Plotter *ptr=(Plotter*)plotter;
     APCWrapper((void*)plotter);
 
-    // Inform the ctor to return
-    ptr->m_alerter.Pulse();
 
     // This seems necessary to make plotting faster
     Fl::add_timeout(0,Redraw,ptr->m_canvas);
@@ -84,6 +81,9 @@ void APCWrapper(void* plotter)
 
     ptr->m_window->end();
     ptr->m_window->show();
+
+    // Inform the ctor to return
+    ptr->m_cond.notify_one();
 }
 
 HANDLE Plotter::m_thread;
@@ -94,17 +94,17 @@ extern "C" DWORD WINAPI GetThreadId(
 );
 
 Plotter::Plotter(double xmin,double xmax,double ymin,double ymax)
-    :m_alerter(),m_xmin(xmin),m_ymin(ymin),m_xmax(xmax),m_ymax(ymax)
+    :m_lock(m_mu),m_xmin(xmin),m_ymin(ymin),m_xmax(xmax),m_ymax(ymax)
 {
     //ctor
     if(!m_thread)
     {
         m_thread=(HANDLE)_beginthread(PlotterThread,0,this);
         m_tid=GetThreadId(m_thread);
-        m_alerter.WaitForThis();
     }
     else
         Invoke(WRAPCALL(APCWrapper,this));
+    m_cond.wait(m_lock);
     m_instance++;
 }
 
