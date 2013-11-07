@@ -25,6 +25,7 @@ class AudioSource : public BaseBlock
                 Audio_Read(ptr->Get());
                 Send();
             }
+            return 0;
         }
     private:
 };

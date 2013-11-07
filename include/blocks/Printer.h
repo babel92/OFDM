@@ -14,6 +14,7 @@ class Printer : public BaseBlock
         {
             Data*input=GetPin(In,0)->GetData();
             puts((char*)input->Get());
+            return 0;
         }
     private:
 };

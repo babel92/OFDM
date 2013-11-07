@@ -23,6 +23,7 @@ class PlotterSink : public BaseBlock
         {
             Data*in=GetPin(In,0)->GetData();
             m_plotter.Plot((float*)in->Get(),in->Size());
+            return 0;
         }
     private:
 };

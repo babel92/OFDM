@@ -32,6 +32,7 @@ class FourierTransform : public BaseBlock
                 ((float*)out->Get())[i]=sqrt(m_buffer[i][0]*m_buffer[i][0]+m_buffer[i][1]*m_buffer[i][1]);
             out->Size()/=2;
             fftwf_destroy_plan(m_plan);
+            return 0;
         }
     private:
 };

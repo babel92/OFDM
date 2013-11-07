@@ -24,6 +24,7 @@ protected:
             sprintf((char*)out->AllocData(100)->Get(),"%d\tShit",i++);
             Send();
         }
+        return 0;
     }
 private:
 };
