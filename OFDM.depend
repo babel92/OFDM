@@ -11,12 +11,14 @@
 
 1314297841 f:\projects\ofdm\libs\portaudio\include\portaudio.h
 
-1383804952 source:f:\projects\ofdm\src\main.cpp
+1384319414 source:f:\projects\ofdm\src\main.cpp
 	"blocks/StringSource.h"
 	"blocks/Printer.h"
 	"blocks/AudioSource.h"
 	"blocks/PlotterSink.h"
 	"blocks/FourierTransform.h"
+	"blocks/BitGenerator.h"
+	"blocks/BitToFloat.h"
 
 1383775509 source:f:\projects\ofdm\src\audio.cpp
 	"audio.h"
@@ -165,7 +167,7 @@
 1367414726 f:\projects\ofdm\include\mgl2\wnd.h
 	"mgl2/mgl.h"
 
-1383867150 source:f:\projects\ofdm\src\plotter.cpp
+1383867853 source:f:\projects\ofdm\src\plotter.cpp
 	"Plotter.h"
 	<process.h>
 	"safecall.h"
@@ -336,14 +338,14 @@
 
 1379375033 source:f:\projects\ofdm\src\safecall_asm.asm
 
-1383865306 source:f:\projects\ofdm\src\baseblock.cpp
+1384318502 source:f:\projects\ofdm\src\baseblock.cpp
 	"BaseBlock.h"
 	<algorithm>
 	<iostream>
 	<chrono>
 	<thread>
 
-1383865438 f:\projects\ofdm\include\baseblock.h
+1384318502 f:\projects\ofdm\include\baseblock.h
 	<cstdlib>
 	<vector>
 	<condition_variable>
@@ -385,7 +387,7 @@
 	<BaseBlock.h>
 	"audio.h"
 
-1383865901 f:\projects\ofdm\include\blocks\plottersink.h
+1384199262 f:\projects\ofdm\include\blocks\plottersink.h
 	"BaseBlock.h"
 	"Plotter.h"
 
@@ -393,4 +395,11 @@
 	<BaseBlock.h>
 	"fftw/fftw3.h"
 	<math.h>
+
+1384319094 f:\projects\ofdm\include\blocks\bitgenerator.h
+	<BaseBlock.h>
+	<string>
+
+1384319330 f:\projects\ofdm\include\blocks\bittofloat.h
+	<BaseBlock.h>
 

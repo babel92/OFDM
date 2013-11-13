@@ -206,7 +206,7 @@ condition_variable BaseBlock::m_start_evnt;
 void BaseBlock::m_worker()
 {
     // wait for derived ctor
-    m_event.wait(m_lock);
+    while(!m_ready);
     if(m_in_ports.size()==0)
     {
         m_start_evnt.wait(m_src_lock);
@@ -286,6 +286,7 @@ BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
     //ctor
     int type;
     string name;
+    m_ready=0;
     for(string InPorts:In)
     {
         GateParser(InPorts,type,name);
@@ -336,6 +337,7 @@ void BaseBlock::Ready()
         m_valid=0;
         Wrapper();
     }*/
+    m_ready=1;
     m_event.notify_all();
 }
 

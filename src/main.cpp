@@ -3,17 +3,17 @@
 #include "blocks/AudioSource.h"
 #include "blocks/PlotterSink.h"
 #include "blocks/FourierTransform.h"
+#include "blocks/BitGenerator.h"
+#include "blocks/BitToFloat.h"
 
 int main()
 {
-    AudioSource src;
-    FourierTransform fft;
-    PlotterSink waveform(0,FRAME_SIZE,-1,1);
-    PlotterSink spectra(0,FRAME_SIZE/2,0,40);
+    BitGenerator src("0011");
+    BitToFloat conv;
+    PlotterSink waveform(0,100,0,2);
 
-    Connect(src,"out",waveform,"in");
-    Connect(src,"out",fft,"in");
-    Connect(fft,"out",spectra,"in");
+    Connect(src,"out",conv,"in");
+    Connect(conv,"out",waveform,"in");
 
     BaseBlock::Run();
     return 0;

@@ -11,7 +11,7 @@ class PlotterSink : public BaseBlock
         :BaseBlock({"float in"},{})
         ,m_plotter(xmin,xmax,ymin,ymax)
         {
-            m_plotter.SetTitle("LOL");
+            m_plotter.SetTitle("Figure");
             Ready();
         }
         virtual ~PlotterSink() {}

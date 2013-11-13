@@ -112,6 +112,7 @@ class BaseBlock
 
         static void Run();
     protected:
+        bool m_ready;
         thread* m_thread;
 
         mutex m_condmutex;
