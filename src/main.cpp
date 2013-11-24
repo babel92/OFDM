@@ -5,16 +5,20 @@
 #include "blocks/FourierTransform.h"
 #include "blocks/BitGenerator.h"
 #include "blocks/BitToFloat.h"
+#include "blocks/Delay.h"
+#include "blocks/NullSink.h"
+#include <iostream>
+
 
 int main()
 {
-    BitGenerator src("0011");
-    BitToFloat conv;
-    PlotterSink waveform(0,100,0,2);
-
-    Connect(src,"out",conv,"in");
-    Connect(conv,"out",waveform,"in");
-
+    AudioSource src;
+    FourierTransform fft;
+    PlotterSink waveform(0,FRAME_SIZE,-1,1);
+    PlotterSink spectra(0,FRAME_SIZE/2,0,40);
+    Connect(src,"out",waveform,"in");
+    Connect(src,"out",fft,"in");
+    Connect(fft,"out",spectra,"in");
     BaseBlock::Run();
     return 0;
 }

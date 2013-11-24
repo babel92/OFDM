@@ -3,6 +3,10 @@
 
 #include <BaseBlock.h>
 #include "audio.h"
+#include <iostream>
+
+using namespace std;
+
 
 class AudioSource : public BaseBlock
 {

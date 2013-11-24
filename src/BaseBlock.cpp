@@ -15,9 +15,9 @@ struct TypeEntry
     {"double",4},
     {"byte",1},
     {"short",2},
-    {"char",1}
+    {"char",1},
+    {"any",1}
 };
-
 
 int TypeListSize=sizeof(TypeList)/sizeof(TypeEntry);
 
@@ -25,6 +25,9 @@ inline int Data::TypeSizeLookup()
 {
     return TypeList[m_type].Size;
 }
+
+int Data::m_alloctime=0;
+int Data::m_freetime=0;
 
 Data::Data(DataPinOut*parent, int type, int size)
 :m_ptr(NULL)
@@ -34,22 +37,29 @@ Data::Data(DataPinOut*parent, int type, int size)
 ,m_size(size)
 {
     if(size>0)
-        m_ptr=new char[TypeSizeLookup()*size];
+        m_ptr=new unsigned char[TypeSizeLookup()*size];
+    m_alloctime++;
 }
 
 Data::~Data()
 {
-    delete [] (char*)m_ptr;
+    delete [] m_ptr;
+    m_freetime++;
 }
 
 void Data::Delete()
 {
-    if(m_refcnt>1)
+    m_mutex.lock();
+
+    if(m_refcnt>0)
     {
         m_refcnt--;
     }
-    else
+    m_mutex.unlock();
+    if(m_refcnt<=0)
+    {
         delete this;
+    }
 }
 
 /****************************************************
@@ -124,7 +134,7 @@ inline bool DataPinOut::Exist(DataPinIn*target)
 
 void DataPinOut::Ready()
 {
-    m_data->m_refcnt=m_target.size();
+    m_data->Addref(m_target.size());
 
     for(vector<DataPinIn*>::iterator it=m_target.begin();it<m_target.end();++it)
     {
@@ -139,10 +149,13 @@ void DataPinOut::Ready()
         }
 */
         // to make sure no packet is missed
-        (*it)->m_parent->m_condmutex.lock();
+        //(*it)->m_parent->m_condmutex.lock();
         // we might need to duplicate the data pointer to prevent race condition
-        (*it)->m_data_dup=m_data;
-        (*it)->m_parent->m_condmutex.unlock();
+
+        /** TODO: fix the fuck of this!!!*/
+        while((*it)->GetData()!=NULL);
+        (*it)->GetData()=m_data;
+        //(*it)->m_parent->m_condmutex.unlock();
         (*it)->Ready();
     }
 }
@@ -191,7 +204,7 @@ void DataPinIn::Ready()
         m_valid=1;
         m_parent->Ready();
     }*/
-    m_parent->Ready();
+    m_parent->DataReady();
 }
 
 /****************************************************
@@ -199,17 +212,29 @@ void DataPinIn::Ready()
  ****************************************************/
 
 
-mutex BaseBlock::m_src_mutex;
-unique_lock<mutex> BaseBlock::m_src_lock=unique_lock<mutex>(m_src_mutex);
-condition_variable BaseBlock::m_start_evnt;
+mutex BaseBlock::m_worker_src_mutex;
+//unique_lock<mutex>*BaseBlock::m_src_lock=NULL;
+condition_variable BaseBlock::m_start_event;
+int BaseBlock::m_src_num=0;
+int BaseBlock::m_src_ready_num=0;
 
 void BaseBlock::m_worker()
 {
     // wait for derived ctor
+	unique_lock<mutex> worker_input_lock(m_worker_input_mutex);
+	//m_worker_src_mutex=new mutex;
+	//m_src_lock=new unique_lock<mutex>(*m_worker_src_mutex);
+
     while(!m_ready);
     if(m_in_ports.size()==0)
     {
-        m_start_evnt.wait(m_src_lock);
+        {
+            unique_lock<mutex> src_lock(m_worker_src_mutex);
+            m_src_ready_num++;
+            //cout<<"a src is entering wait status\n";
+            m_start_event.wait(src_lock);
+            //cout<<"a src finished waiting\n";
+        }
         //should not return
         Work(*((vector<DataPinIn*>*)NULL),m_out_ports);
     }
@@ -219,20 +244,17 @@ void BaseBlock::m_worker()
         for(;;)
         {
             // wait for input notification
-            start:
-            m_event.wait(m_lock);
-
             // if any input pin doesn't have data, just wait
-
-            for(DataPinIn* ptr:m_in_ports)
-                if(ptr->GetData()==NULL)
-                    goto start;
-
+            //cout<<"a block is entering wait status\n";
+            m_event.wait(worker_input_lock,[this](){
+                for(DataPinIn* ptr:m_in_ports)
+                    if(ptr->GetData()==NULL)
+                        return false;
+                return true;
+            });
+            //cout<<"a block finished waiting\n";
             // do work
             Work(m_in_ports,m_out_ports);
-
-            for(DataPinOut* out:m_out_ports)
-                out->Ready();
 
             // this might need a lock, we'll see
             for(DataPinIn* ptr:m_in_ports)
@@ -240,8 +262,11 @@ void BaseBlock::m_worker()
                 // reduce the data refcnt before we lose it
                 ptr->FreeData();
                 ptr->UnReady();
-                ptr->m_data_dup=NULL;
+                ptr->GetData()=NULL;
             }
+
+            for(DataPinOut* out:m_out_ports)
+                out->Ready();
         }
     }
 }
@@ -280,18 +305,23 @@ void GateParser(string gate,int&type,string&name)
 }
 
 BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
-:m_lock(m_condmutex)
-,m_valid(0)
+:
+//,m_src_lock(*m_worker_src_mutex)
+m_valid(0)
 {
     //ctor
     int type;
     string name;
     m_ready=0;
+    bool is_src=1;
     for(string InPorts:In)
     {
+        is_src=0;
         GateParser(InPorts,type,name);
         m_in_ports.push_back(new DataPinIn(this,name,type));
     }
+    if(is_src)
+        m_src_num++;
     for(string OutPorts:Out)
     {
         GateParser(OutPorts,type,name);
@@ -299,11 +329,21 @@ BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
     }
 
     m_thread=new std::thread(&BaseBlock::m_worker,this);
+    //m_thread->detach();
 }
 
 BaseBlock::~BaseBlock()
 {
     //dtor
+    for(auto InPin:m_in_ports)
+    {
+        delete InPin;
+    }
+    for(auto OutPin:m_out_ports)
+    {
+        delete OutPin;
+    }
+    delete m_thread;
     exit(0);
 }
 
@@ -322,9 +362,26 @@ int BaseBlock::Wrapper()
 
 
     //clean up memory by checking ref count
-    for(vector<DataPinIn*>::iterator it=m_in_ports.begin();it<m_in_ports.end();++it)
-        (*it)->FreeData();
+    for(auto it:m_in_ports)
+        it->FreeData();
     return 0;
+}
+
+void BaseBlock::DataReady()
+{
+    /*
+    if(m_valid<(int)m_in_ports.size()-1)
+        m_valid++;
+    else
+    {
+        m_valid=0;
+        Wrapper();
+    }*/
+    m_ready=1;
+    {
+        unique_lock<mutex> lock(m_worker_input_mutex);
+    }
+    m_event.notify_all();
 }
 
 void BaseBlock::Ready()
@@ -344,7 +401,16 @@ void BaseBlock::Ready()
 void BaseBlock::Run()
 {
     std::chrono::milliseconds dura( 2000 );
-    m_start_evnt.notify_all();
+
+    //wait until all source blocks are ready
+    while(m_src_ready_num<m_src_num);
+
+    {
+        unique_lock<mutex> lock(m_worker_src_mutex);
+    }
+    cout<<"Ready...\n";
+    m_start_event.notify_all();
+
 
     while(1)
         std::this_thread::sleep_for( dura );;

@@ -3,7 +3,7 @@
 
 #include <queue>
 #include "global.h"
-#include <fftw/fftw3.h>
+#include "fftw/fftw3.h"
 #include <FL/Fl.H>
 #include <FL/Fl_Overlay_Window.H>
 #include <FL/Fl_Button.H>
@@ -48,9 +48,9 @@ class Plotter
         virtual ~Plotter();
     protected:
     private:
-        static std::mutex m_mu;
-        static std::unique_lock<std::mutex> m_lock;
-        static std::condition_variable m_cond;
+        std::mutex m_mu;
+        std::unique_lock<std::mutex> m_lock;
+        std::condition_variable m_cond;
         static int m_instance;
         static std::thread* m_thread;
         static std::thread::id m_tid;

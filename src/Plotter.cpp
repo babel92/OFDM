@@ -1,10 +1,14 @@
 #include "Plotter.h"
-#include <process.h>
 #include "safecall.h"
+#include <iostream>
 
 using namespace std;
-
+static const int FPS=60;
 int Plotter::m_instance=0;
+
+std::mutex Plotter::m_mu;
+std::unique_lock<std::mutex> Plotter::m_lock(m_mu);
+std::condition_variable Plotter::m_cond;
 
 void Redraw(void*canvas)
 {
@@ -13,20 +17,24 @@ void Redraw(void*canvas)
 
 void APCWrapper(void* plotter);
 
+void timer_cb(void *v) {
+   Fl::repeat_timeout(double(1.0)/FPS,timer_cb);
+}
+
 void PlotterThread(void*plotter)
 {
     Fl::lock();
     Plotter *ptr=(Plotter*)plotter;
     APCWrapper((void*)plotter);
 
-
-    // This seems necessary to make plotting faster
-    Fl::add_timeout(0,Redraw,ptr->m_canvas);
-
+    Fl::add_timeout(0, timer_cb);
+    cout<<"Plotter thread finished initialization\n";
+/*
     while(Fl::wait()>0)
     {
-
-    }
+    }*/
+    Fl::run();
+    cout<<"Plotter thread quit\n";
 }
 
 void APCWrapper(void* plotter)
@@ -81,36 +89,43 @@ void APCWrapper(void* plotter)
 
     ptr->m_window->end();
     ptr->m_window->show();
-
+		
     // Inform the ctor to return
-    ptr->m_cond.notify_one();
+
+    {
+        std::lock_guard<std::mutex> lock(ptr->m_mu);
+        cout<<"Main thread notifying constructor\n";
+        ptr->m_cond.notify_one();
+    }
+
+
 }
 
-HANDLE Plotter::m_thread;
-DWORD Plotter::m_tid;
-
-extern "C" DWORD WINAPI GetThreadId(
-    HANDLE Thread
-);
+std::thread* Plotter::m_thread;
+std::thread::id Plotter::m_tid;
 
 Plotter::Plotter(double xmin,double xmax,double ymin,double ymax)
-    :m_lock(m_mu),m_xmin(xmin),m_ymin(ymin),m_xmax(xmax),m_ymax(ymax)
+    :m_xmin(xmin),m_ymin(ymin),m_xmax(xmax),m_ymax(ymax)
 {
     //ctor
     if(!m_thread)
     {
-        m_thread=(HANDLE)_beginthread(PlotterThread,0,this);
-        m_tid=GetThreadId(m_thread);
+        m_thread=new std::thread(PlotterThread,this);
+        m_tid=m_thread->get_id();
     }
     else
         Invoke(WRAPCALL(APCWrapper,this));
+    cout<<"Plotter waiting for main thread\n";
     m_cond.wait(m_lock);
+    cout<<"Main thread signaled\n";
+    std::this_thread::sleep_for(chrono::milliseconds(100));
     m_instance++;
 }
 
 void Plotter::Plot(Real*buf,int size)
-{/*
+{
     // Duplicate memory to ensure safety, we might use Ca_LinePoint
+    /*
     if(InvokeRequired())
     {
         Real*newbuf=new Real[size];
@@ -119,7 +134,6 @@ void Plotter::Plot(Real*buf,int size)
         return;
     }*/
     Fl::lock();
-
     Ca_LinePoint* lp=NULL;
     Ca_Canvas::current(m_canvas);
     m_y->current();
@@ -127,8 +141,9 @@ void Plotter::Plot(Real*buf,int size)
     for(int i=0;i<size;++i)
         lp=new Ca_LinePoint(lp,i,buf[i],0,FL_BLUE);
     m_canvas->redraw();
-    //delete[] buf;
     Fl::unlock();
+    //Fl::awake();
+    //delete[] buf;
 }
 
 void Plotter::Plot2D(Real*data1,Real*data2,int size)

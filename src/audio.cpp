@@ -16,6 +16,8 @@ int Pa_RecordStream( const void *input,
                      PaStreamCallbackFlags statusFlags,
                      void *userData )
 {
+    NOT_USED(timeInfo);
+    NOT_USED(statusFlags);
     //printf("fc=%d in=%f out=%f curr=%f\n",frameCount,timeInfo->inputBufferAdcTime,timeInfo->outputBufferDacTime,timeInfo->currentTime);
     return UserRecordCallback(input,output,frameCount,0,userData);
 }
@@ -53,7 +55,7 @@ void Init_Portaudio_Record(DataCallback cutecallback,void*userdata)
                                 1,          /* no input channels */
                                 0,          /* stereo output */
                                 paFloat32,
-                                44100,
+                                SAMPLE_RATE,
                                 FRAME_SIZE,
                                 cutecallback?Pa_RecordStream:NULL,
                                 cutecallback?userdata:NULL); /*This is a pointer that will be passed to

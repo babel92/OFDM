@@ -29,7 +29,7 @@ struct PaData
     Sample right;
 };
 
-
+#define NOT_USED(x) ( (void)(x) )
 #define Err_printf printf
 
 #endif // GLOBAL_H_INCLUDED

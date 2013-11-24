@@ -12,11 +12,15 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-pedantic" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add directory="F:/Projects/OFDM/include" />
 					<Add directory="C:/Program Files (x86)/FLTK/include" />
 					<Add directory="include" />
 					<Add directory="include/blocks" />
+					<Add directory="include/block" />
 				</Compiler>
 			</Target>
 			<Target title="Release">
@@ -28,6 +32,7 @@
 					<Add option="-O2" />
 					<Add directory="include" />
 					<Add directory="include/blocks" />
+					<Add directory="include/block" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -38,6 +43,7 @@
 			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add option="-pthread" />
 			<Add option="-DWIN32" />
 			<Add directory="F:/Projects/OFDM/include" />
 			<Add directory="C:/Program Files (x86)/FLTK/include" />
@@ -49,6 +55,7 @@
 			<Add option="-lfltk -lole32" />
 			<Add option="-lgdi32" />
 			<Add option="-luuid -lcomctl32" />
+			<Add option="-pthread" />
 			<Add directory="libs" />
 		</Linker>
 		<Unit filename="include/BaseBlock.h" />
@@ -57,12 +64,17 @@
 		<Unit filename="include/Plotter.h" />
 		<Unit filename="include/audio.h" />
 		<Unit filename="include/blocks/AudioSource.h" />
+		<Unit filename="include/blocks/BitGenerator.h" />
+		<Unit filename="include/blocks/BitToFloat.h" />
+		<Unit filename="include/blocks/Delay.h" />
 		<Unit filename="include/blocks/FourierTransform.h" />
+		<Unit filename="include/blocks/NullSink.h" />
 		<Unit filename="include/blocks/PlotterSink.h" />
 		<Unit filename="include/blocks/Printer.h" />
 		<Unit filename="include/blocks/StringSource.h" />
 		<Unit filename="include/fftw/fftw3.h" />
 		<Unit filename="include/global.h" />
+		<Unit filename="include/manual_reset_event.h" />
 		<Unit filename="include/portaudio/pa_asio.h" />
 		<Unit filename="include/portaudio/pa_jack.h" />
 		<Unit filename="include/portaudio/pa_linux_alsa.h" />

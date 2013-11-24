@@ -25,10 +25,10 @@ class FourierTransform : public BaseBlock
             Data*in=In[0]->GetData();
             Data*out=Out[0]->AllocData(in->Size());
             //memcpy(out->Get(),in->Get(),indata->Size()*2);
-
-            m_plan=fftwf_plan_dft_r2c_1d(m_size,(float*)in->Get(),m_buffer,FFTW_ESTIMATE);
+            //memset(out->Get(),out->Size(),0);
+            m_plan=fftwf_plan_dft_r2c_1d(in->Size(),(float*)in->Get(),m_buffer,FFTW_ESTIMATE);
             fftwf_execute(m_plan);
-            for(int i=0;i<m_size/2;++i)
+            for(int i=0;i<in->Size()/2;++i)
                 ((float*)out->Get())[i]=sqrt(m_buffer[i][0]*m_buffer[i][0]+m_buffer[i][1]*m_buffer[i][1]);
             out->Size()/=2;
             fftwf_destroy_plan(m_plan);

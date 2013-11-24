@@ -3,6 +3,9 @@
 
 #include "BaseBlock.h"
 #include "Plotter.h"
+#include <iostream>
+
+using namespace std;
 
 class PlotterSink : public BaseBlock
 {

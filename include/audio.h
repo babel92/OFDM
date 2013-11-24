@@ -2,7 +2,7 @@
 #define AUDIO_H_INCLUDED
 
 #include "global.h"
-#include "portaudio/portaudio.h"
+#include <portaudio/portaudio.h>
 
 typedef int (*DataCallback)(const void*input,void*output,int framecount,PaTime timespan,void*userdata);
 

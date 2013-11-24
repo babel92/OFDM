@@ -7,6 +7,7 @@
 #include <mutex>
 #include <thread>
 #include <string>
+#include "manual_reset_event.h"
 
 using namespace std;
 
@@ -22,17 +23,26 @@ class Data
 {
     friend class DataPinOut;
 private:
-    void*m_ptr;
+    unsigned char*m_ptr;
     DataPinOut*m_parent;
     int m_refcnt;
     int m_type;
     int m_size;
+    std::mutex m_mutex;
     int TypeSizeLookup();
+
+    static int m_alloctime;
+    static int m_freetime;
 public:
     Data(DataPinOut*parent,int type,int size=0);
+
+    void operator++(int){lock_guard<mutex>lock(m_mutex);m_refcnt++;}
+    void operator--(int){lock_guard<mutex>lock(m_mutex);m_refcnt--;}
+    void Addref(int Count){lock_guard<mutex>lock(m_mutex);m_refcnt+=Count;}
     int& Size(){return m_size;}
     ~Data();
-    unsigned char* Get(){return (unsigned char*)m_ptr;}
+    unsigned char* Get(){return m_ptr;}
+    //void Preserve(){m_refcnt++;}
     void Delete();
 };
 
@@ -60,7 +70,7 @@ public:
     ~DataPinOut();
 
     int Connect(DataPinIn*target);
-    //void SetData(Data* data);
+    void SetData(Data* data);
     void Ready();
     Data* GetData(){return m_data;}
 
@@ -88,9 +98,10 @@ public:
     void UnReady(){m_valid=0;}
     void FreeData(){m_data_dup->Delete();}
     int Connect(DataPinOut*target);
-    Data* GetData(){return m_data_dup;}
+    Data*& GetData(){std::lock_guard<std::mutex>lock(m_mutex);return m_data_dup;}
 protected:
     bool m_valid;
+    mutex m_mutex;
     Data* m_data_dup;
     DataPinOut* m_target;
 };
@@ -115,14 +126,15 @@ class BaseBlock
         bool m_ready;
         thread* m_thread;
 
-        mutex m_condmutex;
+        mutex m_worker_input_mutex;
         mutex m_datamutex;
-        std::unique_lock<std::mutex> m_lock;
         condition_variable m_event;
 
-        static mutex m_src_mutex;
-        static unique_lock<mutex> m_src_lock;
-        static condition_variable m_start_evnt;
+        static mutex m_worker_src_mutex;
+        //unique_lock<mutex> m_src_lock;
+        static condition_variable m_start_event;
+        static int m_src_num;
+        static int m_src_ready_num;
 
         void m_worker();
         int m_valid;
@@ -131,6 +143,7 @@ class BaseBlock
         virtual int Work(vector<DataPinIn*>&In,vector<DataPinOut*>&Out)=0;
         int Wrapper();
         void Send();
+        void DataReady();
         void Ready();
         int FindInPort(const string PortName);
         int FindOutPort(const string PortName);
