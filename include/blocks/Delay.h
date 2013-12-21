@@ -18,7 +18,9 @@ class Delay : public BaseBlock
     protected:
         virtual int Work(INPINS In,OUTPINS Out)
         {
-            Out[0]->SetData(In[0]->GetData());
+			Data* in = In[0]->GetData();
+			Data* out = Out[0]->AllocData(in->Size());
+			memcpy(*out, *in, in->Size());
             std::this_thread::sleep_for( m_dura );
             return 0;
         }

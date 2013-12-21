@@ -38,6 +38,8 @@ public:
 
     void operator++(int){lock_guard<mutex>lock(m_mutex);m_refcnt++;}
     void operator--(int){lock_guard<mutex>lock(m_mutex);m_refcnt--;}
+	operator void*(){ return (void*)Get(); }
+	operator unsigned char*(){ return Get(); }
     void Addref(int Count){lock_guard<mutex>lock(m_mutex);m_refcnt+=Count;}
     int& Size(){return m_size;}
     ~Data();
@@ -96,7 +98,7 @@ public:
     bool Available(){return m_valid;}
     void Ready();
     void UnReady(){m_valid=0;}
-    void FreeData(){m_data_dup->Delete();}
+	void FreeData(){ m_data_dup->Delete(); m_target->m_data = NULL; }
     int Connect(DataPinOut*target);
     Data*& GetData(){std::lock_guard<std::mutex>lock(m_mutex);return m_data_dup;}
 protected:

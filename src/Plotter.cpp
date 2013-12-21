@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace std;
-static const int FPS=60;
+static const int FPS=30;
 int Plotter::m_instance=0;
 
 std::mutex Plotter::m_mu;

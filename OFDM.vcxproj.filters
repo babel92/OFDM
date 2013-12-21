@@ -73,9 +73,6 @@
     <ClInclude Include="include\safecall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\blocks\Printer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\blocks\BitGenerator.h">
       <Filter>Header Files\blocks</Filter>
     </ClInclude>
@@ -98,6 +95,12 @@
       <Filter>Header Files\blocks</Filter>
     </ClInclude>
     <ClInclude Include="include\blocks\StringSource.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\Packet.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="include\blocks\Printer.h">
       <Filter>Header Files\blocks</Filter>
     </ClInclude>
   </ItemGroup>

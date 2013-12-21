@@ -102,6 +102,7 @@
     <ClInclude Include="include\blocks\Delay.h" />
     <ClInclude Include="include\blocks\FourierTransform.h" />
     <ClInclude Include="include\blocks\NullSink.h" />
+    <ClInclude Include="include\blocks\Packet.h" />
     <ClInclude Include="include\blocks\PlotterSink.h" />
     <ClInclude Include="include\blocks\Printer.h" />
     <ClInclude Include="include\blocks\StringSource.h" />

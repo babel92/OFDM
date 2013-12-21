@@ -98,7 +98,7 @@ DataPin::~DataPin()
  ****************************************************/
 
 DataPinOut::DataPinOut(BaseBlock*parent, string&name, int type)
-:DataPin(parent,name,type)
+:DataPin(parent, name, type), m_data(NULL)
 {
 
 }
@@ -134,6 +134,9 @@ inline bool DataPinOut::Exist(DataPinIn*target)
 
 void DataPinOut::Ready()
 {
+	if (!m_data)
+		return;
+
     m_data->Addref(m_target.size());
 
     for(vector<DataPinIn*>::iterator it=m_target.begin();it<m_target.end();++it)
