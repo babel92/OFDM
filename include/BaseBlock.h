@@ -7,6 +7,7 @@
 #include <mutex>
 #include <thread>
 #include <string>
+#include <memory>
 #include "manual_reset_event.h"
 
 using namespace std;
@@ -25,7 +26,7 @@ class Data
 private:
     unsigned char*m_ptr;
     DataPinOut*m_parent;
-    int m_refcnt;
+    //int m_refcnt;
     int m_type;
     int m_size;
     std::mutex m_mutex;
@@ -36,22 +37,25 @@ private:
 public:
     Data(DataPinOut*parent,int type,int size=0);
 
-    void operator++(int){lock_guard<mutex>lock(m_mutex);m_refcnt++;}
-    void operator--(int){lock_guard<mutex>lock(m_mutex);m_refcnt--;}
+    //void operator++(int){lock_guard<mutex>lock(m_mutex);m_refcnt++;}
+    //void operator--(int){lock_guard<mutex>lock(m_mutex);m_refcnt--;}
 	operator void*(){ return (void*)Get(); }
 	operator unsigned char*(){ return Get(); }
-    void Addref(int Count){lock_guard<mutex>lock(m_mutex);m_refcnt+=Count;}
+    //void Addref(int Count){lock_guard<mutex>lock(m_mutex);m_refcnt+=Count;}
     int& Size(){return m_size;}
     ~Data();
     unsigned char* Get(){return m_ptr;}
     //void Preserve(){m_refcnt++;}
-    void Delete();
+    //void Delete();
 };
+
+typedef std::shared_ptr<Data> DataPtr;
 
 class BaseBlock;
 
 class DataPin
 {
+	friend class BaseBlock;
 public:
     DataPin(BaseBlock*parent, string&name, int type);
     int GetType(){return m_type;}
@@ -67,22 +71,27 @@ protected:
 class DataPinOut: public DataPin
 {
     friend class DataPinIn;
+	friend class Data;
+	friend class BaseBlock;
 public:
     DataPinOut(BaseBlock*interfac, std::string&name, int type);
     ~DataPinOut();
 
     int Connect(DataPinIn*target);
     void SetData(Data* data);
-    void Ready();
-    Data* GetData(){return m_data;}
+	void Ready();
+    DataPtr GetData(){return m_data;}
 
-    Data* AllocData(int Count);
-    void FreeData(){m_data->Delete();};
+	DataPtr AllocData(int Count);
+    //void FreeData(){m_data->Delete();};
+
+	void Lock(){ m_dataprotect.lock(); }
+	void Unlock(){ m_dataprotect.unlock(); }
 protected:
     bool Exist(DataPinIn*ptr);
     vector<DataPinIn*> m_target;
-
-    Data* m_data;
+	std::recursive_mutex m_dataprotect;
+    DataPtr m_data;
 };
 
 
@@ -97,14 +106,26 @@ public:
 
     bool Available(){return m_valid;}
     void Ready();
-    void UnReady(){m_valid=0;}
-	void FreeData(){ m_data_dup->Delete(); m_target->m_data = NULL; }
+    void UnReady()
+	{
+		// ensure atomic
+		m_target->Lock();
+		m_data_dup.reset();
+		m_target->m_data.reset();
+		m_valid=0;
+		m_target->Unlock();
+	}
+	//void FreeData(){ std::lock_guard<std::mutex>lock(m_mutex); m_data_dup = NULL; m_target->FreeData(); }
     int Connect(DataPinOut*target);
-    Data*& GetData(){std::lock_guard<std::mutex>lock(m_mutex);return m_data_dup;}
+    DataPtr& GetData(){return m_data_dup;}
+
+
+	void Lock(){ m_target->m_dataprotect.lock(); }
+	void Unlock(){ m_target->m_dataprotect.unlock(); }
 protected:
     bool m_valid;
     mutex m_mutex;
-    Data* m_data_dup;
+    DataPtr m_data_dup;
     DataPinOut* m_target;
 };
 
@@ -125,12 +146,15 @@ class BaseBlock
 
         static void Run();
     protected:
-        bool m_ready;
+		int m_worktime;
+        volatile bool m_ready;
         thread* m_thread;
 
         mutex m_worker_input_mutex;
         mutex m_datamutex;
         condition_variable m_event;
+		condition_variable m_dataresetevent;
+		unique_lock<mutex>* datalockptr;
 
         static mutex m_worker_src_mutex;
         //unique_lock<mutex> m_src_lock;

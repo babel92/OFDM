@@ -12,8 +12,8 @@ class Printer : public BaseBlock
     protected:
         virtual int Work(INPINS In,OUTPINS Out)
         {
-			char buf[40960];
-            Data*input=In[0]->GetData();
+			char buf[10240];
+            DataPtr input=In[0]->GetData();
 			memcpy(buf, *input, input->Size());
 			buf[input->Size()] = '\0';
             puts(buf);

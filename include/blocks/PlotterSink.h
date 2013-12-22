@@ -22,7 +22,7 @@ class PlotterSink : public BaseBlock
         Plotter m_plotter;
         virtual int Work(INPINS In,OUTPINS Out)
         {
-            Data*in=In[0]->GetData();
+            DataPtr in=In[0]->GetData();
             m_plotter.Plot((float*)in->Get(),in->Size());
             return 0;
         }

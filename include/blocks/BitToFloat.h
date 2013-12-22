@@ -11,8 +11,8 @@ class BitToFloat : public BaseBlock
     protected:
         virtual int Work(INPINS In,OUTPINS Out)
         {
-            Data*in=In[0]->GetData();
-            Data*out=Out[0]->AllocData(in->Size());
+            DataPtr in=In[0]->GetData();
+            DataPtr out=Out[0]->AllocData(in->Size());
             for(int i=0;i<in->Size();++i)
                 ((float*)out->Get())[i]=(in->Get()[i]=='1')?1.f:0.f;
             return 0;

@@ -3,12 +3,14 @@
 
 #include "BaseBlock.h"
 
-const char HEADER[] = "HEAD"; //32 bit
+const char HEADER[] = "HEAD"; 
+const int HEADER_SIZE = sizeof(HEADER)-1;
+const int FIELD_SIZE = 4;
 
-class PacketWrapper: public BaseBlock
+class PacketWrapper : public BaseBlock
 {
 public:
-	PacketWrapper() 
+	PacketWrapper()
 		:BaseBlock({ "any in" }, { "any out" })
 	{
 		Ready();
@@ -20,12 +22,12 @@ public:
 protected:
 	virtual int Work(INPINS In, OUTPINS Out)
 	{
-		Data*in = In[0]->GetData();
-		Data*out = Out[0]->AllocData(in->Size() + 4 + 4);
-		memcpy(*out, (const void*)HEADER, 4);
+		DataPtr in = In[0]->GetData();
+		DataPtr out = Out[0]->AllocData(in->Size() + HEADER_SIZE + 4);
+		memcpy(*out, (const void*)HEADER, HEADER_SIZE);
 		int size = in->Size();
-		memcpy(*out + 4, &size, 4);
-		memcpy(*out + 8, in->Get(), in->Size());
+		memcpy(*out + HEADER_SIZE, &size, 4);
+		memcpy(*out + HEADER_SIZE + 4, in->Get(), in->Size());
 		return 0;
 	}
 };
@@ -34,7 +36,7 @@ class PacketExtractor : public BaseBlock
 {
 public:
 	PacketExtractor()
-		:BaseBlock({ "any in" }, { "any out" })
+		:BaseBlock({ "any in" }, { "any out" }), M_state(HEADER), M_datatoread(-1), M_fieldtoread(-1)
 	{
 		Ready();
 	}
@@ -43,17 +45,80 @@ public:
 
 	}
 protected:
+	const char* M_state;
+	int M_datatoread;
+	int M_fieldtoread;
 	virtual int Work(INPINS In, OUTPINS Out)
 	{
-		Data*in = In[0]->GetData();
-		if (0 != memcmp(*in, (const void*)HEADER, 4))
-			return 0;
+		
+		DataPtr in = In[0]->GetData();
+		char* ptr = (char*)in->Get();
+		static char* wptr,fptr;
+		static char fieldbuffer[FIELD_SIZE];
+		DataPtr out;
+		for (;;)
+		{
+			if ((unsigned char*)ptr >= in->Get() + in->Size())
+				return 0;
 
-		int size;
-		memcpy(&size, *in + 4, 4);
-		Data*out = Out[0]->AllocData(size);
-
-		memcpy(*out, *in + 8, size);
+			if (M_state >= HEADER + HEADER_SIZE)
+			{
+				// End of header, it's the packet we want
+				M_fieldtoread = FIELD_SIZE;
+				wptr = fieldbuffer;
+				M_state = HEADER - 1;
+				continue;
+			}
+			else if (M_state < HEADER)
+			{
+				if (M_fieldtoread>0)
+				{
+					int bytetowrite = min(((int)(in->Get()) + in->Size()) - (int)ptr, M_fieldtoread);
+					assert(bytetowrite != 0);
+					memcpy(wptr, ptr, bytetowrite);
+					wptr += bytetowrite;
+					ptr += bytetowrite;
+					M_fieldtoread -= bytetowrite;
+				}
+				if (M_fieldtoread == 0)
+				{
+					// We've retrieved the field, now do some allocation
+					M_fieldtoread = -1;
+					M_datatoread = *reinterpret_cast<int*>(fieldbuffer);
+					out = Out[0]->AllocData(M_datatoread);
+					wptr = (char*)out->Get();
+					continue;
+				}
+				else if (M_datatoread>0)
+				{
+					int bytetowrite = min(((int)(in->Get()) + in->Size()) - (int)ptr, M_datatoread);
+					assert(bytetowrite != 0);
+					memcpy(wptr, ptr, bytetowrite);
+					wptr += bytetowrite;
+					ptr += bytetowrite;
+					M_datatoread -= bytetowrite;
+				}
+				// We want it done in one pass
+				if (M_datatoread == 0)
+				{
+					M_datatoread = -1;
+					M_state = HEADER;
+					return 0;
+				}
+			}
+			else if (*M_state == *ptr)
+			{
+				M_state++, ptr++;
+				continue;
+			}
+			else
+			{
+				// Return to the beginning 
+				M_state = HEADER, ptr++;
+				continue;
+			}
+		}
+		
 		return 0;
 	}
 };

@@ -22,8 +22,8 @@ class FourierTransform : public BaseBlock
 
         virtual int Work(INPINS In,OUTPINS Out)
         {
-            Data*in=In[0]->GetData();
-            Data*out=Out[0]->AllocData(in->Size());
+            DataPtr in=In[0]->GetData();
+            DataPtr out=Out[0]->AllocData(in->Size());
             //memcpy(out->Get(),in->Get(),indata->Size()*2);
             //memset(out->Get(),out->Size(),0);
             m_plan=fftwf_plan_dft_r2c_1d(in->Size(),(float*)in->Get(),m_buffer,FFTW_ESTIMATE);

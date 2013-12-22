@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <chrono>
+#include <cassert>
 #include <thread>
 
 struct TypeEntry
@@ -32,7 +33,6 @@ int Data::m_freetime=0;
 Data::Data(DataPinOut*parent, int type, int size)
 :m_ptr(NULL)
 ,m_parent(parent)
-,m_refcnt(0)
 ,m_type(type)
 ,m_size(size)
 {
@@ -46,7 +46,7 @@ Data::~Data()
     delete [] m_ptr;
     m_freetime++;
 }
-
+/*
 void Data::Delete()
 {
     m_mutex.lock();
@@ -58,10 +58,11 @@ void Data::Delete()
     m_mutex.unlock();
     if(m_refcnt<=0)
     {
+		m_parent->m_data = NULL;
         delete this;
     }
 }
-
+*/
 /****************************************************
  *
  ****************************************************/
@@ -108,12 +109,13 @@ DataPinOut::~DataPinOut()
 
 }
 
-Data* DataPinOut::AllocData(int Count)
+DataPtr DataPinOut::AllocData(int Count)
 {
     // we don't need to worry about leak here
-    m_data=new Data(this,m_type,Count);
-
-    return m_data;
+	shared_ptr<Data> ptr = shared_ptr<Data>(new Data(this, m_type, Count));
+	m_data = ptr;
+	assert(m_data);
+	return ptr;
 }
 
 int DataPinOut::Connect(DataPinIn*target)
@@ -137,9 +139,9 @@ void DataPinOut::Ready()
 	if (!m_data)
 		return;
 
-    m_data->Addref(m_target.size());
+	//m_data->Addref(m_target.size());
 
-    for(vector<DataPinIn*>::iterator it=m_target.begin();it<m_target.end();++it)
+    for(auto it=m_target.begin();it<m_target.end();++it)
     {
         DataPinIn*dbg=*it;
         // if one target haven't done, just ignore it
@@ -156,11 +158,18 @@ void DataPinOut::Ready()
         // we might need to duplicate the data pointer to prevent race condition
 
         /** TODO: fix the fuck of this!!!*/
-        while((*it)->GetData()!=NULL);
+		/*
+		if (!(m_parent->m_in_ports.size() == 0 && m_parent->m_worktime == 1))
+			m_parent->m_dataresetevent.wait(*m_parent->datalockptr);
+			*/
+		while ((*it)->m_data_dup)
+			std::this_thread::sleep_for(chrono::milliseconds(0));
+		(*it)->Lock();
         (*it)->GetData()=m_data;
+		(*it)->Unlock();
         //(*it)->m_parent->m_condmutex.unlock();
         (*it)->Ready();
-    }
+	}
 }
 /*
 void DataPinOut::SetData(Data* data)
@@ -239,37 +248,38 @@ void BaseBlock::m_worker()
             //cout<<"a src finished waiting\n";
         }
         //should not return
+		m_datamutex.lock();
         Work(*((vector<DataPinIn*>*)NULL),m_out_ports);
     }
     else
     {
-
         for(;;)
         {
             // wait for input notification
             // if any input pin doesn't have data, just wait
             //cout<<"a block is entering wait status\n";
-            m_event.wait(worker_input_lock,[this](){
-                for(DataPinIn* ptr:m_in_ports)
-                    if(ptr->GetData()==NULL)
-                        return false;
-                return true;
-            });
+            m_event.wait(worker_input_lock);
             //cout<<"a block finished waiting\n";
             // do work
-            Work(m_in_ports,m_out_ports);
-
+			{
+				unique_lock<mutex> lock(m_datamutex);
+				Work(m_in_ports, m_out_ports);
+			}
+			m_worktime++;
             // this might need a lock, we'll see
             for(DataPinIn* ptr:m_in_ports)
             {
                 // reduce the data refcnt before we lose it
-                ptr->FreeData();
+                //ptr->FreeData();
+				unique_lock<mutex> lock(ptr->m_target->m_parent->m_datamutex);
                 ptr->UnReady();
-                ptr->GetData()=NULL;
             }
 
-            for(DataPinOut* out:m_out_ports)
-                out->Ready();
+
+			for (DataPinOut* out : m_out_ports)
+			{
+				out->Ready();
+			}
         }
     }
 }
@@ -310,7 +320,7 @@ void GateParser(string gate,int&type,string&name)
 BaseBlock::BaseBlock(GateDescription In,GateDescription Out)
 :
 //,m_src_lock(*m_worker_src_mutex)
-m_valid(0)
+m_valid(0), m_worktime(0)
 {
     //ctor
     int type;
@@ -352,10 +362,13 @@ BaseBlock::~BaseBlock()
 
 void BaseBlock::Send()
 {
+	m_datamutex.unlock();
+	m_worktime++;
     for(DataPinOut* out:m_out_ports)
         out->Ready();
+	m_datamutex.lock();
 }
-
+/*
 int BaseBlock::Wrapper()
 {
 
@@ -369,7 +382,7 @@ int BaseBlock::Wrapper()
         it->FreeData();
     return 0;
 }
-
+*/
 void BaseBlock::DataReady()
 {
     /*
@@ -380,11 +393,14 @@ void BaseBlock::DataReady()
         m_valid=0;
         Wrapper();
     }*/
+	for (DataPinIn* ptr : m_in_ports)
+	if (ptr->GetData() == NULL)
+		return;
     m_ready=1;
-    {
-        unique_lock<mutex> lock(m_worker_input_mutex);
-    }
-    m_event.notify_all();
+	{
+		std::unique_lock<std::mutex> lock(m_worker_input_mutex);
+		m_event.notify_all();
+	}
 }
 
 void BaseBlock::Ready()
@@ -397,6 +413,8 @@ void BaseBlock::Ready()
         m_valid=0;
         Wrapper();
     }*/
+	
+
     m_ready=1;
     m_event.notify_all();
 }

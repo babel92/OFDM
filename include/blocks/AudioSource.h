@@ -25,8 +25,8 @@ class AudioSource : public BaseBlock
             DataPinOut*outpin=Out[0];
             for(;;)
             {
-                Data*ptr=outpin->AllocData(FRAME_SIZE);
-                Audio_Read(ptr->Get());
+                DataPtr ptr=outpin->AllocData(FRAME_SIZE);
+                Audio_Read((*ptr).Get());
                 Send();
             }
             return 0;

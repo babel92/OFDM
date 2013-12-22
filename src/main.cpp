@@ -22,13 +22,13 @@ int main()
     Connect(src,"out",fft,"in");
     Connect(fft,"out",spectra,"in");
 	*/
-	BitGenerator src("01010101010101");
+	StringSource src(PatternMaker("12HEAD\x5\x0\x0\x00 aawdwawd"));
 	Delay delay(1000);
 	PacketWrapper wrp;
 	PacketExtractor ext;
 	Printer prt;
-	Connect(src, 0, delay, 0);
-	Connect(delay, 0, /*wrp, 0);
+	Connect(src, 0, /*delay, 0);
+	Connect(delay, 0, wrp, 0);
 	Connect(wrp, 0,*/ ext, 0);
 	Connect(ext, 0, prt, 0);
     BaseBlock::Run();

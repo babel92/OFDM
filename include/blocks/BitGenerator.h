@@ -3,6 +3,7 @@
 
 #include <BaseBlock.h>
 #include <string>
+#include <cassert>
 
 using namespace std;
 
@@ -23,7 +24,8 @@ protected:
         int len=m_pattern.length();
         for(;;)
         {
-            Data*ptr=outpin->AllocData(m_outsize);
+            DataPtr ptr=outpin->AllocData(m_outsize);
+			assert(ptr);
             for(int i=0;i<m_outsize;i+=len)
                 memcpy(ptr->Get()+i,m_pattern.c_str(),len);
             Send();
