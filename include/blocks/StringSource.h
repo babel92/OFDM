@@ -16,9 +16,9 @@ template<int N>
 Pattern PatternMaker(const char(&P)[N])
 {
 	Pattern ret;
-	ret.P = new char[sizeof(P)];
-	ret.Size = N;
-	memcpy(ret.P, P, sizeof(P));
+	ret.P = new char[N-1];
+	ret.Size = N-1;
+	memcpy(ret.P, P, N-1);
 	return ret;
 };
 

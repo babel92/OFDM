@@ -22,7 +22,7 @@ int main()
     Connect(src,"out",fft,"in");
     Connect(fft,"out",spectra,"in");
 	*/
-	StringSource src(PatternMaker("12HEAD\x5\x0\x0\x00 aawdwawd"));
+	StringSource src(PatternMaker("AD1231212HEAD\x5\x0\x0\x00 aawdwdHEAD\x6\x0\x0\x0 12"));
 	Delay delay(1000);
 	PacketWrapper wrp;
 	PacketExtractor ext;

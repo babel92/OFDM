@@ -76,13 +76,14 @@ class DataPinOut: public DataPin
 public:
     DataPinOut(BaseBlock*interfac, std::string&name, int type);
     ~DataPinOut();
-
-    int Connect(DataPinIn*target);
-    void SetData(Data* data);
 	void Ready();
+    int Connect(DataPinIn*target);
+	void SetData(DataPtr Data);
     DataPtr GetData(){return m_data;}
+	DataPtr DetachData(){ DataPtr ret = m_data; m_data.reset(); return ret; }
 
 	DataPtr AllocData(int Count);
+	DataPtr DataPinOut::AllocDataOnly(int Count);
     //void FreeData(){m_data->Delete();};
 
 	void Lock(){ m_dataprotect.lock(); }
@@ -111,7 +112,8 @@ public:
 		// ensure atomic
 		m_target->Lock();
 		m_data_dup.reset();
-		m_target->m_data.reset();
+		// This is causing troubles
+		//m_target->m_data.reset();
 		m_valid=0;
 		m_target->Unlock();
 	}

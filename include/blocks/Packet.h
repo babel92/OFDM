@@ -48,6 +48,7 @@ protected:
 	const char* M_state;
 	int M_datatoread;
 	int M_fieldtoread;
+	DataPtr out;
 	virtual int Work(INPINS In, OUTPINS Out)
 	{
 		
@@ -55,11 +56,16 @@ protected:
 		char* ptr = (char*)in->Get();
 		static char* wptr,fptr;
 		static char fieldbuffer[FIELD_SIZE];
-		DataPtr out;
+		
+		// Here we implement a FSM to detect data header
 		for (;;)
 		{
 			if ((unsigned char*)ptr >= in->Get() + in->Size())
+			{
+				// Make sure no unprepared data are sent
+				Out[0]->DetachData();
 				return 0;
+			}
 
 			if (M_state >= HEADER + HEADER_SIZE)
 			{
@@ -85,7 +91,8 @@ protected:
 					// We've retrieved the field, now do some allocation
 					M_fieldtoread = -1;
 					M_datatoread = *reinterpret_cast<int*>(fieldbuffer);
-					out = Out[0]->AllocData(M_datatoread);
+					// AllocDataOnly() allocates space but does not attach to m_data 
+					out = Out[0]->AllocDataOnly(M_datatoread);
 					wptr = (char*)out->Get();
 					continue;
 				}
@@ -103,7 +110,9 @@ protected:
 				{
 					M_datatoread = -1;
 					M_state = HEADER;
-					return 0;
+					Out[0]->SetData(out);
+					Send();
+					//return 0;
 				}
 			}
 			else if (*M_state == *ptr)
@@ -115,6 +124,7 @@ protected:
 			{
 				// Return to the beginning 
 				M_state = HEADER, ptr++;
+				out.reset();
 				continue;
 			}
 		}

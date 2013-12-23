@@ -109,13 +109,25 @@ DataPinOut::~DataPinOut()
 
 }
 
+DataPtr DataPinOut::AllocDataOnly(int Count)
+{
+	// we don't need to worry about leak here
+	shared_ptr<Data> ptr = shared_ptr<Data>(new Data(this, m_type, Count));
+	return ptr;
+}
+
 DataPtr DataPinOut::AllocData(int Count)
 {
     // we don't need to worry about leak here
 	shared_ptr<Data> ptr = shared_ptr<Data>(new Data(this, m_type, Count));
-	m_data = ptr;
+	SetData(ptr);
 	assert(m_data);
 	return ptr;
+}
+
+void DataPinOut::SetData(DataPtr Data)
+{
+	m_data = Data;
 }
 
 int DataPinOut::Connect(DataPinIn*target)
@@ -139,29 +151,10 @@ void DataPinOut::Ready()
 	if (!m_data)
 		return;
 
-	//m_data->Addref(m_target.size());
-
     for(auto it=m_target.begin();it<m_target.end();++it)
     {
         DataPinIn*dbg=*it;
-        // if one target haven't done, just ignore it
-        //if((*it)->m_data_dup!=NULL)
-/*
-        if(!(*it)->m_parent->m_condmutex.try_lock())
-        {
-            m_data->Delete();
-            continue;
-        }
-*/
-        // to make sure no packet is missed
-        //(*it)->m_parent->m_condmutex.lock();
-        // we might need to duplicate the data pointer to prevent race condition
 
-        /** TODO: fix the fuck of this!!!*/
-		/*
-		if (!(m_parent->m_in_ports.size() == 0 && m_parent->m_worktime == 1))
-			m_parent->m_dataresetevent.wait(*m_parent->datalockptr);
-			*/
 		while ((*it)->m_data_dup)
 			std::this_thread::sleep_for(chrono::milliseconds(0));
 		(*it)->Lock();
@@ -171,13 +164,6 @@ void DataPinOut::Ready()
         (*it)->Ready();
 	}
 }
-/*
-void DataPinOut::SetData(Data* data)
-{
-    m_data=data;
-    Ready();
-}
-*/
 
 /****************************************************
  *
@@ -394,8 +380,8 @@ void BaseBlock::DataReady()
         Wrapper();
     }*/
 	for (DataPinIn* ptr : m_in_ports)
-	if (ptr->GetData() == NULL)
-		return;
+		if (ptr->GetData() == NULL)
+			return;
     m_ready=1;
 	{
 		std::unique_lock<std::mutex> lock(m_worker_input_mutex);
