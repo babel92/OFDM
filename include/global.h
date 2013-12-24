@@ -10,7 +10,7 @@
 
 
 #define FRAME_SIZE (512*2)
-#define SAMPLE_RATE (44100)
+#define SAMPLE_RATE (44100/4)
 #define SAMPLE_TIME (1./SAMPLE_RATE)
 
 typedef
