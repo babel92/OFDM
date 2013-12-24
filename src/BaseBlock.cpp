@@ -50,7 +50,7 @@ namespace jsdsp{
 	}
 
 	/****************************************************
-	 *
+	 * Connect Functions
 	 ****************************************************/
 
 	void Connect(BaseBlock&Out, string OutPin, BaseBlock&In, string InPin)
@@ -64,7 +64,7 @@ namespace jsdsp{
 	}
 
 	/****************************************************
-	 *
+	 * Base Data Pin
 	 ****************************************************/
 
 	DataPin::DataPin(BaseBlock*parent, string&name, int type)
@@ -81,7 +81,7 @@ namespace jsdsp{
 	}
 
 	/****************************************************
-	 *
+	 * Output Data Pin
 	 ****************************************************/
 
 	DataPinOut::DataPinOut(BaseBlock*parent, string&name, int type)
@@ -98,7 +98,7 @@ namespace jsdsp{
 	DataPtr DataPinOut::AllocDataOnly(int Count)
 	{
 		// we don't need to worry about leak here
-		shared_ptr<Data> ptr = shared_ptr<Data>(new Data(this, m_type, Count));
+		DataPtr ptr = DataPtr(new Data(this, m_type, Count));
 		return ptr;
 	}
 
@@ -107,7 +107,6 @@ namespace jsdsp{
 		// we don't need to worry about leak here
 		DataPtr ptr = DataPtr(new Data(this, m_type, Count));
 		SetData(ptr);
-		assert(m_data);
 		return ptr;
 	}
 
@@ -137,28 +136,22 @@ namespace jsdsp{
 		if (!m_data)
 			return;
 
-		for (auto it = m_target.begin(); it < m_target.end(); ++it)
+		for (auto it : m_target)
 		{
-			DataPinIn*dbg = *it;
-			/*
-			while ((*it)->m_data_dup)
-				std::this_thread::sleep_for(chrono::milliseconds(0));
-				*/
-			if ((*it)->m_data_dup)
+			if (it->m_data_dup)
 			{
 				unique_lock<mutex> lock(m_evntmu);
-				m_dataevent.wait(lock, [&]{return !(*it)->m_valid; });
+				m_dataevent.wait(lock, [&]{return !it->m_valid; });
 			}
-			(*it)->Lock();
-			(*it)->GetData() = m_data;
-			(*it)->Unlock();
-			//(*it)->m_parent->m_condmutex.unlock();
-			(*it)->Ready();
+			it->Lock();
+			it->GetData() = m_data;
+			it->Unlock();
+			it->Ready();
 		}
 	}
 
 	/****************************************************
-	 *
+	 * Input Data Pin
 	 ****************************************************/
 
 	DataPinIn::DataPinIn(BaseBlock*parent, string&name, int type)
@@ -188,23 +181,17 @@ namespace jsdsp{
 
 
 	void DataPinIn::Ready()
-	{/*
-		if(!m_valid)
-		{
-		m_valid=1;
-		m_parent->Ready();
-		}*/
+	{
 		m_valid = 1;
 		m_parent->DataReady();
 	}
 
 	/****************************************************
-	 *
+	 * Base Block
 	 ****************************************************/
 
 
 	mutex BaseBlock::m_worker_src_mutex;
-	//unique_lock<mutex>*BaseBlock::m_src_lock=NULL;
 	condition_variable BaseBlock::m_start_event;
 	int BaseBlock::m_src_num = 0;
 	int BaseBlock::m_src_ready_num = 0;
@@ -213,8 +200,6 @@ namespace jsdsp{
 	{
 		// wait for derived ctor
 		unique_lock<mutex> worker_input_lock(m_worker_input_mutex);
-		//m_worker_src_mutex=new mutex;
-		//m_src_lock=new unique_lock<mutex>(*m_worker_src_mutex);
 
 		while (!m_ready);
 		if (m_in_ports.size() == 0)
@@ -222,9 +207,7 @@ namespace jsdsp{
 			{
 				unique_lock<mutex> src_lock(m_worker_src_mutex);
 				m_src_ready_num++;
-				//cout<<"a src is entering wait status\n";
 				m_start_event.wait(src_lock);
-				//cout<<"a src finished waiting\n";
 			}
 			//should not return
 			m_datamutex.lock();
@@ -235,26 +218,18 @@ namespace jsdsp{
 			for (;;)
 			{
 				// wait for input notification
-				// if any input pin doesn't have data, just wait
-				//cout<<"a block is entering wait status\n";
 				m_event.wait(worker_input_lock);
-				//cout<<"a block finished waiting\n";
-				// do work
 				{
 					unique_lock<mutex> lock(m_datamutex);
 					Work(m_in_ports, m_out_ports);
-			}
-				m_worktime++;
-				// this might need a lock, we'll see
-				for (DataPinIn* ptr : m_in_ports)
-				{
-					// reduce the data refcnt before we lose it
-					//ptr->FreeData();
-					unique_lock<mutex> lock(ptr->m_target->m_parent->m_datamutex);
-					ptr->UnReady();
 				}
+				m_worktime++;
 
-
+				for (DataPinIn* in : m_in_ports)
+				{
+					unique_lock<mutex> lock(in->m_target->m_parent->m_datamutex);
+					in->UnReady();
+				}
 				for (DataPinOut* out : m_out_ports)
 				{
 					out->Ready();
@@ -347,31 +322,9 @@ namespace jsdsp{
 			out->Ready();
 		m_datamutex.lock();
 	}
-	/*
-	int BaseBlock::Wrapper()
-	{
 
-	//test the return value
-	//mem allocation for out ports should be done in Work()
-	Work(m_in_ports,m_out_ports);
-
-
-	//clean up memory by checking ref count
-	for(auto it:m_in_ports)
-	it->FreeData();
-	return 0;
-	}
-	*/
 	void BaseBlock::DataReady()
 	{
-		/*
-		if(m_valid<(int)m_in_ports.size()-1)
-		m_valid++;
-		else
-		{
-		m_valid=0;
-		Wrapper();
-		}*/
 		for (DataPinIn* ptr : m_in_ports)
 		if (ptr->GetData() == NULL)
 			return;
@@ -379,41 +332,28 @@ namespace jsdsp{
 		{
 			std::unique_lock<std::mutex> lock(m_worker_input_mutex);
 			m_event.notify_all();
-	}
+		}
 	}
 
 	void BaseBlock::Ready()
 	{
-		/*
-		if(m_valid<(int)m_in_ports.size()-1)
-		m_valid++;
-		else
-		{
-		m_valid=0;
-		Wrapper();
-		}*/
-
-
 		m_ready = 1;
 		m_event.notify_all();
 	}
 
 	void BaseBlock::Run()
 	{
-		std::chrono::milliseconds dura(2000);
-
 		//wait until all source blocks are ready
 		while (m_src_ready_num < m_src_num);
 
 		{
 			unique_lock<mutex> lock(m_worker_src_mutex);
-	}
+		}
 		cout << "Ready...\n";
 		m_start_event.notify_all();
 
-
 		while (1)
-			std::this_thread::sleep_for(dura);;
+			std::this_thread::sleep_for(std::chrono::milliseconds(1000));;
 	}
 
 }
