@@ -1,7 +1,6 @@
 #include "blocks/StringSource.h"
 #include "blocks/Printer.h"
 #include "blocks/AudioSource.h"
-#include "blocks/PlotterSink.h"
 #include "blocks/FourierTransform.h"
 #include "blocks/BitGenerator.h"
 #include "blocks/BitToFloat.h"
@@ -15,19 +14,14 @@ using namespace jsdsp;
 
 int main()
 {
-	
-	AudioSource src;
-	/*
+	AudioSource src;	
     FourierTransform fft;
-	PlotterSink spectra(0, FRAME_SIZE / 2, 0, 40);
-    PlotterSink waveform(0,FRAME_SIZE,-1,1);
+	JPlotSink spectra(0, FRAME_SIZE / 2, 0, 40);
+    JPlotSink waveform(0,FRAME_SIZE,-1,1);
 	Connect(src, "out", waveform, "in");
     Connect(src,"out",fft,"in");
     Connect(fft,"out",spectra,"in");
-	*/
-	JPlotSink wf;
-
-	Connect(src, 0, wf, 0);
+	
 	/*
 	StringSource src(PatternMaker("AD1231212HEAD\x5\x0\x0\x00 aawdwdHEAD\x6\x0\x0\x0 12"));
 	Delay delay(100);

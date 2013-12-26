@@ -88,10 +88,7 @@
   <ItemGroup>
     <ClCompile Include="src\audio.cpp" />
     <ClCompile Include="src\BaseBlock.cpp" />
-    <ClCompile Include="src\Cartesian.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Plotter.cpp" />
-    <ClCompile Include="src\safecall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\JPlot\JPlot\JPlot.h" />
@@ -105,15 +102,10 @@
     <ClInclude Include="include\blocks\JPlotSink.h" />
     <ClInclude Include="include\blocks\NullSink.h" />
     <ClInclude Include="include\blocks\Packet.h" />
-    <ClInclude Include="include\blocks\PlotterSink.h" />
     <ClInclude Include="include\blocks\Printer.h" />
     <ClInclude Include="include\blocks\StringSource.h" />
-    <ClInclude Include="include\Cartesian.H" />
     <ClInclude Include="include\global.h" />
     <ClInclude Include="include\JSSynchornize.h" />
-    <ClInclude Include="include\manual_reset_event.h" />
-    <ClInclude Include="include\Plotter.h" />
-    <ClInclude Include="include\safecall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

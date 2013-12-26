@@ -10,7 +10,7 @@ namespace jsdsp{
 	class JPlotSink : public BaseBlock
 	{
 	public:
-		JPlotSink() :BaseBlock({ "float in" }, {}) 
+		JPlotSink(double xmin = 0, double xmax = 100, double ymin = 0, double ymax = 100) :BaseBlock({ "float in" }, {})
 		{ 
 			if (!JPlot_Init())
 			{
@@ -18,8 +18,8 @@ namespace jsdsp{
 				throw;
 			}
 			M_graph = JPlot_NewPlot();
-			JPlot_SetRange(M_graph, JPXRANGE, 0, 256);
-			JPlot_SetRange(M_graph, JPYRANGE, -1, 1);
+			JPlot_SetRange(M_graph, JPXRANGE, xmin, xmax);
+			JPlot_SetRange(M_graph, JPYRANGE, ymin, ymax);
 			Ready(); 
 		}
 		virtual ~JPlotSink() {}

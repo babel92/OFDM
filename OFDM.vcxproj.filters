@@ -35,16 +35,7 @@
     <ClCompile Include="src\BaseBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Cartesian.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Plotter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\safecall.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -55,22 +46,10 @@
     <ClInclude Include="include\BaseBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Cartesian.H">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\global.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\JSSynchornize.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\manual_reset_event.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Plotter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\safecall.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\blocks\BitGenerator.h">
@@ -89,9 +68,6 @@
       <Filter>Header Files\blocks</Filter>
     </ClInclude>
     <ClInclude Include="include\blocks\NullSink.h">
-      <Filter>Header Files\blocks</Filter>
-    </ClInclude>
-    <ClInclude Include="include\blocks\PlotterSink.h">
       <Filter>Header Files\blocks</Filter>
     </ClInclude>
     <ClInclude Include="include\blocks\StringSource.h">

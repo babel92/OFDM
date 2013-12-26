@@ -2,12 +2,16 @@
 #define PACKET
 
 #include "BaseBlock.h"
+#include <algorithm>
 
 namespace jsdsp{
 
-	const char HEADER[] = "HEAD";
-	const int HEADER_SIZE = sizeof(HEADER)-1;
-	const int FIELD_SIZE = 4;
+	namespace packetdef
+	{
+		static const char HEADER[] = "HEAD";
+		static const int HEADER_SIZE = sizeof(HEADER)-1;
+		static const int FIELD_SIZE = 4;
+	};
 
 	class PacketWrapper : public BaseBlock
 	{
@@ -24,6 +28,7 @@ namespace jsdsp{
 	protected:
 		virtual int Work(INPINS In, OUTPINS Out)
 		{
+			using namespace packetdef;
 			DataPtr in = In[0]->GetData();
 			DataPtr out = Out[0]->AllocData(in->Size() + HEADER_SIZE + 4);
 			memcpy(*out, (const void*)HEADER, HEADER_SIZE);
@@ -38,8 +43,9 @@ namespace jsdsp{
 	{
 	public:
 		PacketExtractor()
-			:BaseBlock({ "any in" }, { "any out" }), M_state(HEADER), M_datatoread(-1), M_fieldtoread(-1)
+			:BaseBlock({ "any in" }, { "any out" }), M_state(packetdef::HEADER), M_datatoread(-1), M_fieldtoread(-1)
 		{
+
 			Ready();
 		}
 		virtual ~PacketExtractor()
@@ -53,7 +59,7 @@ namespace jsdsp{
 		DataPtr out;
 		virtual int Work(INPINS In, OUTPINS Out)
 		{
-
+			using namespace packetdef;
 			DataPtr in = In[0]->GetData();
 			char* ptr = (char*)in->Get();
 			static char* wptr, fptr;

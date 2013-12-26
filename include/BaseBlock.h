@@ -8,7 +8,6 @@
 #include <thread>
 #include <string>
 #include <memory>
-#include "manual_reset_event.h"
 
 using namespace std;
 
