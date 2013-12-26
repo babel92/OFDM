@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace std;
-static const int FPS=30;
+static const int FPS=60;
 int Plotter::m_instance=0;
 
 std::mutex Plotter::m_mu;
@@ -125,12 +125,12 @@ Plotter::Plotter(double xmin,double xmax,double ymin,double ymax)
 void Plotter::Plot(Real*buf,int size)
 {
     // Duplicate memory to ensure safety, we might use Ca_LinePoint
-    /*
+	/*
     if(InvokeRequired())
-    {
+	{
         Real*newbuf=new Real[size];
         memcpy(newbuf,buf,size*sizeof(Real));
-        Invoke(WRAPCALL(&Plotter::Plot,this,newbuf,size));
+        Invoke(WRAPCALL(&Plotter::Plot,this,buf,size));
         return;
     }*/
     Fl::lock();
@@ -142,7 +142,7 @@ void Plotter::Plot(Real*buf,int size)
         lp=new Ca_LinePoint(lp,i,buf[i],0,FL_BLUE);
     m_canvas->redraw();
     Fl::unlock();
-    //Fl::awake();
+    Fl::awake();
     //delete[] buf;
 }
 

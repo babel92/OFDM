@@ -103,5 +103,11 @@
     <ClInclude Include="include\blocks\Printer.h">
       <Filter>Header Files\blocks</Filter>
     </ClInclude>
+    <ClInclude Include="include\blocks\JPlotSink.h">
+      <Filter>Header Files\blocks</Filter>
+    </ClInclude>
+    <ClInclude Include="..\JPlot\JPlot\JPlot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

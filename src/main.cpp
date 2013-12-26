@@ -8,14 +8,16 @@
 #include "blocks/Delay.h"
 #include "blocks/NullSink.h"
 #include "blocks/Packet.h"
+#include "blocks/JPlotSink.h"
 #include <iostream>
 
 using namespace jsdsp;
 
 int main()
 {
-	/*
+	
 	AudioSource src;
+	/*
     FourierTransform fft;
 	PlotterSink spectra(0, FRAME_SIZE / 2, 0, 40);
     PlotterSink waveform(0,FRAME_SIZE,-1,1);
@@ -23,16 +25,19 @@ int main()
     Connect(src,"out",fft,"in");
     Connect(fft,"out",spectra,"in");
 	*/
-	
+	JPlotSink wf;
+
+	Connect(src, 0, wf, 0);
+	/*
 	StringSource src(PatternMaker("AD1231212HEAD\x5\x0\x0\x00 aawdwdHEAD\x6\x0\x0\x0 12"));
 	Delay delay(100);
 	PacketWrapper wrp;
 	PacketExtractor ext;
 	Printer prt;
-	Connect(src, 0,/* delay, 0);
+	Connect(src, 0, delay, 0);
 	Connect(delay, 0, wrp, 0);
-	Connect(wrp, 0,*/ ext, 0);
-	Connect(ext, 0, prt, 0);
+	Connect(wrp, 0, ext, 0);
+	Connect(ext, 0, prt, 0);*/
     BaseBlock::Run();
     return 0;
 }
