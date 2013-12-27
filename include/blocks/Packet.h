@@ -19,7 +19,6 @@ namespace jsdsp{
 		PacketWrapper()
 			:BaseBlock({ "any in" }, { "any out" })
 		{
-			Ready();
 		}
 		virtual ~PacketWrapper()
 		{

@@ -8,7 +8,7 @@ namespace jsdsp{
 	class NullSink : public BaseBlock
 	{
 	public:
-		NullSink() :BaseBlock({ "any in" }, {}) { Ready(); }
+		NullSink() :BaseBlock({ "any in" }, {}) { }
 		virtual ~NullSink() {}
 	protected:
 		virtual int Work(INPINS In, OUTPINS Out)

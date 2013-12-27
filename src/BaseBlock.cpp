@@ -201,7 +201,7 @@ namespace jsdsp{
 		// wait for derived ctor
 		unique_lock<mutex> worker_input_lock(m_worker_input_mutex);
 
-		while (!m_ready);
+		//while (!m_ready);
 		if (m_in_ports.size() == 0)
 		{
 			{
@@ -337,6 +337,8 @@ namespace jsdsp{
 
 	void BaseBlock::Ready()
 	{
+		if (m_ready)
+			return;
 		m_ready = 1;
 		m_event.notify_all();
 	}

@@ -16,7 +16,6 @@ namespace jsdsp{
 		{
 			m_pattern = Pattern;
 			m_outsize = lcm(128, m_pattern.length());
-			Ready();
 		}
 		virtual ~BitGenerator() {}
 	protected:

@@ -8,7 +8,7 @@ namespace jsdsp{
 	class BitToFloat : public BaseBlock
 	{
 	public:
-		BitToFloat() :BaseBlock({ "char in" }, { "float out" }) { Ready(); }
+		BitToFloat() :BaseBlock({ "char in" }, { "float out" }) { }
 	protected:
 		virtual int Work(INPINS In, OUTPINS Out)
 		{

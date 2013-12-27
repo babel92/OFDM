@@ -81,11 +81,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="libs\fftw\libfftw3-3.def" />
-    <None Include="libs\fftw\libfftw3f-3.def" />
-    <None Include="libs\fftw\libfftw3l-3.def" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="src\audio.cpp" />
     <ClCompile Include="src\BaseBlock.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -103,6 +98,7 @@
     <ClInclude Include="include\blocks\NullSink.h" />
     <ClInclude Include="include\blocks\Packet.h" />
     <ClInclude Include="include\blocks\Printer.h" />
+    <ClInclude Include="include\blocks\SpectraSink.h" />
     <ClInclude Include="include\blocks\StringSource.h" />
     <ClInclude Include="include\global.h" />
     <ClInclude Include="include\JSSynchornize.h" />

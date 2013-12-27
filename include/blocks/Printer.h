@@ -9,7 +9,7 @@ namespace jsdsp{
 	class Printer : public BaseBlock
 	{
 	public:
-		Printer() :BaseBlock({ "char in" }, {}) { Ready(); }
+		Printer() :BaseBlock({ "char in" }, {}) { }
 		virtual ~Printer() {}
 	protected:
 		virtual int Work(INPINS In, OUTPINS Out)

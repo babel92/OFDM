@@ -8,6 +8,7 @@
 #include "blocks/NullSink.h"
 #include "blocks/Packet.h"
 #include "blocks/JPlotSink.h"
+#include "blocks/SpectraSink.h"
 #include <iostream>
 
 using namespace jsdsp;
@@ -15,13 +16,10 @@ using namespace jsdsp;
 int main()
 {
 	AudioSource src;	
-    FourierTransform fft;
-	JPlotSink spectra(0, FRAME_SIZE / 2, 0, 40);
-    JPlotSink waveform(0,FRAME_SIZE,-1,1);
+	JPlotSink waveform(0, FRAME_SIZE, -1, 1, "Waveform");
+	SpectraSink ss(FRAME_SIZE, SAMPLE_RATE);;
+	Connect(src, "out", ss, "in");
 	Connect(src, "out", waveform, "in");
-    Connect(src,"out",fft,"in");
-    Connect(fft,"out",spectra,"in");
-	
 	/*
 	StringSource src(PatternMaker("AD1231212HEAD\x5\x0\x0\x00 aawdwdHEAD\x6\x0\x0\x0 12"));
 	Delay delay(100);

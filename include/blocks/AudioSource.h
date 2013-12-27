@@ -17,7 +17,6 @@ namespace jsdsp{
 			Init_Portaudio();
 			// Blocking IO
 			Init_Portaudio_Record(NULL, NULL);
-			Ready();
 		}
 		virtual ~AudioSource() {}
 	protected:

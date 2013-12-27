@@ -26,7 +26,6 @@ namespace jsdsp{
 	private:
 		unsigned char*m_ptr;
 		DataPinOut*m_parent;
-		//int m_refcnt;
 		int m_type;
 		int m_size;
 		std::mutex m_mutex;
@@ -36,17 +35,11 @@ namespace jsdsp{
 		static int m_freetime;
 	public:
 		Data(DataPinOut*parent, int type, int size = 0);
-
-		//void operator++(int){lock_guard<mutex>lock(m_mutex);m_refcnt++;}
-		//void operator--(int){lock_guard<mutex>lock(m_mutex);m_refcnt--;}
 		operator void*(){ return (void*)Get(); }
 		operator unsigned char*(){ return Get(); }
-		//void Addref(int Count){lock_guard<mutex>lock(m_mutex);m_refcnt+=Count;}
 		int& Size(){ return m_size; }
 		~Data();
 		unsigned char* Get(){ return m_ptr; }
-		//void Preserve(){m_refcnt++;}
-		//void Delete();
 	};
 
 	typedef std::shared_ptr<Data> DataPtr;

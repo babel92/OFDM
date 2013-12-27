@@ -30,7 +30,6 @@ namespace jsdsp{
 		StringSource(Pattern P) :BaseBlock({}, { "char out" })
 		{
 			M_pat = P;
-			Ready();
 		}
 		virtual ~StringSource() {}
 	protected:

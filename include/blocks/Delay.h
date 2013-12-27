@@ -14,7 +14,6 @@ namespace jsdsp{
 			:BaseBlock({ "any in" }, { "any out" })
 			, m_dura(millisec)
 		{
-			Ready();
 		}
 		virtual ~Delay() {}
 	protected:
