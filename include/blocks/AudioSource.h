@@ -27,6 +27,7 @@ namespace jsdsp{
 			{
 				DataPtr ptr = outpin->AllocData(FRAME_SIZE);
 				Audio_Read(ptr->Get());
+				float* buf = (float*)ptr->Get();
 				Send();
 			}
 			return 0;

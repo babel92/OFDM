@@ -9,8 +9,10 @@ typedef int (*DataCallback)(const void*input,void*output,int framecount,PaTime t
 void Init_Portaudio();
 
 void Init_Portaudio_Record(DataCallback,void*userdata);
+void Init_Portaudio_Play(DataCallback, void*userdata);
 
 void Audio_Read(void*Output);
+void Audio_Write(void*Input);
 
 void Cleanup_Portaudio();
 

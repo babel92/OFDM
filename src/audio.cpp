@@ -6,8 +6,12 @@
 #include <cstring>
 
 DataCallback UserRecordCallback;
+DataCallback UserPlayCallback;
 PaStream *RecordStream;
+PaStream *PlaybackStream;
 PaTime LastTime;
+
+int Initialized = 0;
 
 int Pa_RecordStream( const void *input,
                      void *output,
@@ -22,14 +26,30 @@ int Pa_RecordStream( const void *input,
     return UserRecordCallback(input,output,frameCount,0,userData);
 }
 
+int Pa_PlayStream(const void *input,
+	void *output,
+	unsigned long frameCount,
+	const PaStreamCallbackTimeInfo* timeInfo,
+	PaStreamCallbackFlags statusFlags,
+	void *userData)
+{
+	NOT_USED(timeInfo);
+	NOT_USED(statusFlags);
+	//printf("fc=%d in=%f out=%f curr=%f\n",frameCount,timeInfo->inputBufferAdcTime,timeInfo->outputBufferDacTime,timeInfo->currentTime);
+	return UserPlayCallback(input, output, frameCount, 0, userData);
+}
+
 void Init_Portaudio()
 {
+	if (Initialized)
+		return;
     PaError err=Pa_Initialize();
     if(paNoError!=err)
     {
         Err_printf(  "PortAudio error: %s\n", Pa_GetErrorText( err ) );
         exit(1);
     }
+	Initialized = 1;
 }
 
 /** This function has static ptrs which are initialized by arg size
@@ -52,8 +72,8 @@ void Init_Portaudio_Record(DataCallback cutecallback,void*userdata)
     UserRecordCallback=cutecallback;
     /* Open an audio I/O stream. */
     err = Pa_OpenDefaultStream( &RecordStream,
-                                1,          /* no input channels */
-                                0,          /* stereo output */
+                                1,        
+                                0,        
                                 paFloat32,
                                 SAMPLE_RATE,
                                 FRAME_SIZE,
@@ -64,9 +84,33 @@ void Init_Portaudio_Record(DataCallback cutecallback,void*userdata)
     Pa_StartStream(RecordStream);
 }
 
+void Init_Portaudio_Play(DataCallback cutecallback, void*userdata)
+{
+	PaError err;
+
+	UserPlayCallback = cutecallback;
+	/* Open an audio I/O stream. */
+	err = Pa_OpenDefaultStream(&PlaybackStream,
+		0,          /* input channels */
+		1,          /* stereo output */
+		paFloat32,
+		SAMPLE_RATE,
+		FRAME_SIZE,
+		cutecallback ? Pa_PlayStream : NULL,
+		cutecallback ? userdata : NULL); /*This is a pointer that will be passed to
+										 your callback*/
+	LastTime = Pa_GetStreamTime(PlaybackStream);
+	Pa_StartStream(PlaybackStream);
+}
+
 void Audio_Read(void*Output)
 {
     Pa_ReadStream(RecordStream,Output,FRAME_SIZE);
+}
+
+void Audio_Write(void*Input)
+{
+	Pa_WriteStream(PlaybackStream, Input, FRAME_SIZE);
 }
 
 void Cleanup_Portaudio()
