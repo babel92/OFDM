@@ -121,6 +121,10 @@ namespace jsdsp{
 		{
 			return -1;
 		}
+		if (target->GetType() != m_type
+			&& m_type != TypeListSize - 1 
+			&& target->GetType() != TypeListSize - 1)
+			throw;
 		target->m_target = this;
 		m_target.push_back(target);
 		return m_target.size() - 1;

@@ -94,8 +94,10 @@
     <ClInclude Include="include\blocks\AudioSource.h" />
     <ClInclude Include="include\blocks\BitGenerator.h" />
     <ClInclude Include="include\blocks\BitToFloat.h" />
+    <ClInclude Include="include\blocks\Convolution.h" />
     <ClInclude Include="include\blocks\Delay.h" />
     <ClInclude Include="include\blocks\FourierTransform.h" />
+    <ClInclude Include="include\blocks\QPSK.h" />
     <ClInclude Include="include\blocks\SignalGenerator.h" />
     <ClInclude Include="include\blocks\JPlotSink.h" />
     <ClInclude Include="include\blocks\NullSink.h" />

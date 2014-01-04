@@ -30,11 +30,6 @@ namespace jsdsp{
 		{
 			DataPtr in = In[0]->GetData();
 			float* buf = (float*)in->Get();
-			for (int i = 0; i < FRAME_SIZE; ++i)
-			{
-				if (buf[i]>1)
-					throw;
-			}
 			JPlot_Draw(M_graph, (float*)in->Get(), in->Size());
 			return 0;
 		}
