@@ -23,7 +23,7 @@ namespace jsdsp{
 		virtual int Work(INPINS In, OUTPINS Out)
 		{
 			DataPtr ptr = In[0]->GetData();
-			Audio_Write(ptr->Get());
+			Audio_Write(ptr->Get(), ptr->Size());
 			return 0;
 		}
 	private:

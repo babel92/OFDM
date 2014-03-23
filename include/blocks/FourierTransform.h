@@ -19,6 +19,7 @@ namespace jsdsp{
 	protected:
 		int m_size;
 		fftwf_complex* m_buffer;
+		
 		fftwf_plan m_plan;
 
 		int DoFFT(float*in, float*out, int size)

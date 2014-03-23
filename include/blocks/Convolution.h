@@ -5,7 +5,7 @@
 
 namespace jsdsp
 {
-	class Convolution: public BaseBlock
+	class Convolution : virtual public BaseBlock
 	{
 	public:
 		Convolution()

@@ -8,9 +8,12 @@
 #include <cstdarg>
 #include <FL/Fl.H>
 
-#define FRAME_SIZE (512*2)
-#define SAMPLE_RATE (44100)
+#define FRAME_SIZE (512)
+#define SAMPLE_RATE (44100./4)
 #define SAMPLE_TIME (1./SAMPLE_RATE)
+#define QPSK_CARRIER_FREQ (SAMPLE_RATE/8)
+
+#define PI 3.1415927
 
 typedef
 #ifdef USE_DOUBLE

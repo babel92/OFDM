@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)\libs\portaudio;$(SolutionDir)\libs\fltk;$(SolutionDir)\libs\fftw;C:\Program Files (x86)\Visual Leak Detector\lib\Win32;$(VCInstallDir)lib;$(VCInstallDir)atlmfc\lib;$(WindowsSDK_LibraryPath_x86);</LibraryPath>
-    <IncludePath>$(SolutionDir)include;C:\Program Files (x86)\Visual Leak Detector\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir)..\armadillo-4.100.2\include;$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);</IncludePath>
     <OutDir>$(SolutionDir)VSBuild\bin\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)VSBuild\obj\$(Configuration)\$(ProjectName)</IntDir>
   </PropertyGroup>
@@ -63,7 +63,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>../../../JPlot/Debug/JPLib.lib;Ws2_32.lib;portaudio_x86.lib;libfftw3f-3.lib;fltk.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../../JPlot/Debug/JPLib.lib;Ws2_32.lib;portaudio_x86.lib;libfftw3-3.lib;fltk.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -85,7 +85,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\audio.cpp" />
     <ClCompile Include="..\src\BaseBlock.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

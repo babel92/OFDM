@@ -9,6 +9,7 @@
 #include "blocks/Packet.h"
 #include "blocks/JPlotSink.h"
 #include "blocks/SpectraSink.h"
+#include "blocks/Zoom.h"
 #include <iostream>
 
 using namespace jsdsp;
@@ -16,6 +17,7 @@ using namespace jsdsp;
 int main()
 {
 	AudioSource src;	
+	ZoomTo zoom(1);
 	JPlotSink waveform(0, FRAME_SIZE, -1, 1, "Waveform");
 	SpectraSink ss(FRAME_SIZE, SAMPLE_RATE);;
 	Connect(src, "out", ss, "in");

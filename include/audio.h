@@ -11,8 +11,8 @@ void Init_Portaudio();
 void Init_Portaudio_Record(DataCallback,void*userdata);
 void Init_Portaudio_Play(DataCallback, void*userdata);
 
-void Audio_Read(void*Output);
-void Audio_Write(void*Input);
+void Audio_Read(void*Output, int Size = FRAME_SIZE);
+void Audio_Write(void*Input, int Size = FRAME_SIZE);
 
 void Cleanup_Portaudio();
 

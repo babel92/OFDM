@@ -12,10 +12,10 @@ namespace jsdsp{
 	class BitGenerator : public BaseBlock
 	{
 	public:
-		BitGenerator(const string&Pattern) :BaseBlock({}, { "byte out" })
+		BitGenerator(const string&Pattern, int FrameSize=0) :BaseBlock({}, { "byte out" })
 		{
 			m_pattern = Pattern;
-			m_outsize = lcm(128, m_pattern.length());
+			m_outsize = lcm(FrameSize ? FrameSize : 128, m_pattern.length());
 		}
 		virtual ~BitGenerator() {}
 	protected:

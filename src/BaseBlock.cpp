@@ -15,7 +15,7 @@ namespace jsdsp{
 	{
 		{ "int", 4 },
 		{ "float", 4 },
-		{ "double", 4 },
+		{ "double", 8 },
 		{ "byte", 1 },
 		{ "short", 2 },
 		{ "char", 1 },

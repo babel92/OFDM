@@ -103,14 +103,14 @@ void Init_Portaudio_Play(DataCallback cutecallback, void*userdata)
 	Pa_StartStream(PlaybackStream);
 }
 
-void Audio_Read(void*Output)
+void Audio_Read(void*Output,int Size)
 {
-    Pa_ReadStream(RecordStream,Output,FRAME_SIZE);
+    Pa_ReadStream(RecordStream,Output,Size);
 }
 
-void Audio_Write(void*Input)
+void Audio_Write(void*Input, int Size)
 {
-	Pa_WriteStream(PlaybackStream, Input, FRAME_SIZE);
+	Pa_WriteStream(PlaybackStream, Input, Size);
 }
 
 void Cleanup_Portaudio()
